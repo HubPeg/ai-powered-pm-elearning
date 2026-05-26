@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Powered Project Manager – E-Learning</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#1a1a2e;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:0}
+.top-nav{background:#1F4E79;color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.nav-logo{font-size:15px;font-weight:600;letter-spacing:.3px}
+.nav-logo span{opacity:.65;font-weight:400}
+.progress-wrap{display:flex;align-items:center;gap:10px}
+.progress-bar-outer{width:140px;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden}
+.progress-bar-inner{height:100%;background:#5BC4E0;border-radius:3px;transition:width .4s}
+.progress-label{font-size:12px;opacity:.8}
+.layout{display:flex;min-height:calc(100vh - 50px)}
+.sidebar{width:210px;background:#fff;border-right:1px solid #e2e8f0;padding:16px 0;flex-shrink:0;position:sticky;top:50px;height:calc(100vh - 50px);overflow-y:auto}
+.sidebar-module{padding:9px 16px;font-size:13px;cursor:pointer;border-left:3px solid transparent;color:#64748b;display:flex;align-items:center;gap:8px;transition:all .15s}
+.sidebar-module:hover{background:#f8fafc;color:#1e293b}
+.sidebar-module.active{border-left-color:#1F4E79;background:#f0f4f8;color:#1F4E79;font-weight:600}
+.sidebar-module.done{color:#64748b}
+.dot{width:20px;height:20px;border-radius:50%;background:#e2e8f0;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all .2s}
+.sidebar-module.done .dot{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.sidebar-module.active .dot{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.content{flex:1;padding:28px 32px;overflow-y:auto;background:#f0f4f8}
+.screen{display:none}
+.screen.active{display:block}
+.hero{background:linear-gradient(135deg,#1F4E79 60%,#2E75B6 100%);border-radius:14px;padding:36px;color:#fff;margin-bottom:24px;box-shadow:0 4px 18px rgba(31,78,121,.18)}
+.hero-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.7;margin-bottom:8px}
+.hero-title{font-size:28px;font-weight:700;line-height:1.3;margin-bottom:10px}
+.hero-sub{font-size:15px;opacity:.85;line-height:1.65;margin-bottom:20px}
+.hero-meta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-tag{background:rgba(255,255,255,.15);border-radius:6px;padding:5px 12px;font-size:12px;display:flex;align-items:center;gap:5px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:24px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card:hover{border-color:#1F4E79;box-shadow:0 4px 12px rgba(31,78,121,.12);transform:translateY(-2px)}
+.card-icon{font-size:22px;color:#1F4E79;margin-bottom:8px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.card-meta{font-size:12px;color:#64748b}
+.card-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin-top:6px;background:#dbeafe;color:#1e40af;font-weight:600}
+.module-header{margin-bottom:20px}
+.module-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:6px}
+.module-title{font-size:22px;font-weight:700;margin-bottom:6px;color:#1a1a2e}
+.module-sub{font-size:14px;color:#64748b;line-height:1.6}
+.section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.section-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#1a1a2e}
+.scenario{background:#dbeafe;border-left:4px solid #1F4E79;border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.65;color:#1e3a5f}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.tool-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;text-align:center}
+.tool-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.tool-use{font-size:11px;color:#64748b}
+.prompt-template{background:#1a1a2e;color:#a8d8ea;border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;margin-bottom:12px;font-family:'Courier New',monospace}
+.prompt-template span{background:rgba(255,255,255,.15);border-radius:3px;padding:1px 6px;color:#ffd700}
+.prompt-result{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:13px;line-height:1.65;min-height:80px;color:#64748b;font-style:italic}
+.quiz-q{font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5;color:#1a1a2e}
+.quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.quiz-opt{background:#fff;border:1.5px solid #cbd5e1;border-radius:10px;padding:11px 16px;cursor:pointer;font-size:14px;text-align:left;transition:all .15s;color:#1a1a2e;font-family:inherit}
+.quiz-opt:hover{border-color:#1F4E79;background:#dbeafe;color:#1e3a5f}
+.quiz-opt.correct{background:#dcfce7;border-color:#16a34a;color:#14532d}
+.quiz-opt.wrong{background:#fee2e2;border-color:#dc2626;color:#7f1d1d}
+.quiz-feedback{font-size:13px;padding:10px 14px;border-radius:10px;margin-bottom:12px;display:none}
+.quiz-feedback.correct{background:#dcfce7;color:#14532d;display:block}
+.quiz-feedback.wrong{background:#fee2e2;color:#7f1d1d;display:block}
+.btn{background:#1F4E79;color:#fff;border:none;border-radius:10px;padding:10px 22px;font-size:14px;cursor:pointer;transition:all .15s;font-family:inherit;font-weight:600;box-shadow:0 2px 8px rgba(31,78,121,.18)}
+.btn:hover{background:#163d61;transform:translateY(-1px)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-outline{background:#fff;border:1.5px solid #cbd5e1;color:#374151;box-shadow:none}
+.btn-outline:hover{background:#f8fafc;border-color:#1F4E79;color:#1F4E79;transform:none}
+.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.alert-box{background:#fff7ed;border-left:4px solid #ea580c;border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#7c2d12;line-height:1.6;margin-bottom:12px}
+.success-box{background:#dcfce7;border-left:4px solid #16a34a;border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#14532d;line-height:1.6;margin-bottom:12px}
+ul.checklist{list-style:none;padding:0}
+ul.checklist li{padding:5px 0;font-size:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+ul.checklist li::before{content:'✓';color:#16a34a;font-weight:700;flex-shrink:0;margin-top:1px}
+.risk-cell{padding:8px 4px;border-radius:6px;text-align:center;font-size:11px;cursor:pointer;transition:transform .1s;user-select:none;font-weight:600}
+.risk-cell:hover{transform:scale(1.08)}
+.risk-low{background:#dcfce7;color:#14532d}
+.risk-mid{background:#fef9c3;color:#854d0e}
+.risk-high{background:#fee2e2;color:#7f1d1d}
+.risk-selected{outline:3px solid #1F4E79;outline-offset:2px}
+.score-display{text-align:center;padding:20px}
+.score-big{font-size:52px;font-weight:700;color:#1F4E79;line-height:1}
+.score-label{font-size:14px;color:#64748b;margin-top:4px}
+.cert{border:3px solid #1F4E79;border-radius:14px;padding:32px;text-align:center;background:#fff;box-shadow:0 4px 18px rgba(31,78,121,.12)}
+.cert-title{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#64748b;margin-bottom:12px}
+.cert-main{font-size:22px;font-weight:700;color:#1F4E79;margin-bottom:8px}
+.cert-name{font-size:28px;font-weight:700;margin-bottom:8px;border-bottom:2px solid #1F4E79;display:inline-block;padding-bottom:4px;min-width:200px}
+.cert-sub{font-size:14px;color:#64748b;line-height:1.6}
+.mini-progress{display:flex;align-items:center;gap:8px;font-size:12px;color:#64748b;margin-bottom:16px}
+.mini-bar{flex:1;height:5px;background:#e2e8f0;border-radius:3px;overflow:hidden}
+.mini-bar-fill{height:100%;background:#1F4E79;border-radius:3px;transition:width .4s}
+textarea,input[type=text]{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;background:#fff;color:#1a1a2e;font-family:inherit;resize:vertical;transition:border-color .15s}
+textarea:focus,input[type=text]:focus{outline:none;border-color:#1F4E79;box-shadow:0 0 0 3px rgba(31,78,121,.1)}
+.compare-item{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0;margin-bottom:2px;cursor:pointer;border-radius:0;transition:opacity .15s}
+.compare-item:hover{opacity:.85}
+.compare-cell-task{padding:9px 10px;font-size:13px;border:1px solid #e2e8f0;background:#fff;font-weight:500}
+.compare-cell{padding:9px 10px;font-size:13px;border:1px solid #e2e8f0;background:#f8fafc}
+.compare-cell-green{padding:9px 10px;font-size:13px;border:1px solid #e2e8f0;background:#f0fdf4;color:#15803d;font-weight:600}
+.golden-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #e2e8f0;font-size:14px;line-height:1.55}
+.golden-num{min-width:24px;height:24px;background:#1F4E79;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="top-nav">
+  <div class="nav-logo">AI-Powered Project Manager <span>| E-Learning HWZ</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="globalBar" style="width:0%"></div></div>
+    <div class="progress-label" id="globalLabel">0 / 7</div>
+  </div>
+</nav>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-module active" id="nav-0" onclick="goTo(0)"><div class="dot" id="dot-0">0</div>Einleitung</div>
+  <div class="sidebar-module" id="nav-1" onclick="goTo(1)"><div class="dot" id="dot-1">1</div>KI & PM Basics</div>
+  <div class="sidebar-module" id="nav-2" onclick="goTo(2)"><div class="dot" id="dot-2">2</div>Projektplanung</div>
+  <div class="sidebar-module" id="nav-3" onclick="goTo(3)"><div class="dot" id="dot-3">3</div>Risikoanalyse</div>
+  <div class="sidebar-module" id="nav-4" onclick="goTo(4)"><div class="dot" id="dot-4">4</div>Kommunikation</div>
+  <div class="sidebar-module" id="nav-5" onclick="goTo(5)"><div class="dot" id="dot-5">5</div>PM mit vs. ohne KI</div>
+  <div class="sidebar-module" id="nav-6" onclick="goTo(6)"><div class="dot" id="dot-6">6</div>Abschluss</div>
+</aside>
+<main class="content">
+
+<!-- S0 -->
+<div class="screen active" id="s0">
+  <div class="hero">
+    <div class="hero-eyebrow">HWZ Projektmanagement · Gruppen-Leistungsnachweis</div>
+    <div class="hero-title">AI-Powered Project Manager</div>
+    <div class="hero-sub">Du verlierst 40% deiner Zeit mit Mails, Status-Updates und Meetings. Was wäre, wenn eine KI dir genau diese Last abnehmen würde?</div>
+    <div class="hero-meta">
+      <div class="hero-tag">⏱ ca. 60 Min</div>
+      <div class="hero-tag">📚 5 Module</div>
+      <div class="hero-tag">💻 Interaktiv</div>
+      <div class="hero-tag">🇩🇪 Deutsch</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">⚠️ Warum scheitern Projekte?</div>
+    <ul class="checklist">
+      <li>Anforderungen sind unklar oder unvollständig dokumentiert</li>
+      <li>Kommunikation zwischen Stakeholdern läuft schlecht</li>
+      <li>Risiken werden zu spät erkannt und adressiert</li>
+      <li>Projektmanager verlieren Zeit mit administrativen Aufgaben</li>
+    </ul>
+  </div>
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">🧠</div><div class="card-title">Modul 1</div><div class="card-meta">KI & PM Grundlagen</div><div class="card-badge">10 Min</div></div>
+    <div class="card"><div class="card-icon">📅</div><div class="card-title">Modul 2</div><div class="card-meta">Projektplanung mit KI</div><div class="card-badge">12 Min</div></div>
+    <div class="card"><div class="card-icon">🛡️</div><div class="card-title">Modul 3</div><div class="card-meta">Risikoanalyse mit KI</div><div class="card-badge">12 Min</div></div>
+    <div class="card"><div class="card-icon">💬</div><div class="card-title">Modul 4</div><div class="card-meta">Kommunikation mit KI</div><div class="card-badge">11 Min</div></div>
+    <div class="card"><div class="card-icon">📊</div><div class="card-title">Modul 5</div><div class="card-meta">PM mit vs. ohne KI</div><div class="card-badge">8 Min</div></div>
+    <div class="card"><div class="card-icon">🏆</div><div class="card-title">Abschluss</div><div class="card-meta">Assessment & Zertifikat</div><div class="card-badge">5 Min</div></div>
+  </div>
+  <div class="scenario"><strong>Dein Szenario:</strong> Du bist Projektleiterin bei TechStart AG. Dein Team hat 3 Monate, 8 Personen und ein Budget von CHF 120'000. Die Deadline rückt näher – und du verlierst täglich Stunden mit Verwaltungsarbeit. Dieses E-Learning zeigt dir, wie KI-Tools deinen Projektalltag transformieren.</div>
+  <div class="btn-row"><button class="btn" onclick="completeAndNext(0)">Kurs starten →</button></div>
+</div>
+
+<!-- S1 -->
+<div class="screen" id="s1">
+  <div class="module-header">
+    <div class="module-eyebrow">Modul 1 · 10 Minuten</div>
+    <div class="module-title">KI & Projektmanagement: Grundlagen</div>
+    <div class="module-sub">Was ist KI? Welche Tools existieren? Und was kann KI im PM wirklich leisten?</div>
+  </div>
+  <div class="mini-progress"><span>Fortschritt Modul 1</span><div class="mini-bar"><div class="mini-bar-fill" style="width:0%" id="m1prog"></div></div><span id="m1step">0/2</span></div>
+  <div id="m1-p1">
+    <div class="section">
+      <div class="section-title">💡 Was ist KI? – In 3 Sätzen</div>
+      <p style="font-size:14px;line-height:1.7;margin-bottom:12px">KI sind Computersysteme, die Aufgaben ausführen, für die normalerweise menschliche Intelligenz nötig wäre – wie Texte verstehen, schreiben oder Muster erkennen.</p>
+      <p style="font-size:14px;line-height:1.7;margin-bottom:12px"><strong>Die Analogie:</strong> KI ist wie ein sehr schnell lesender, gut informierter Assistent – er kann in Sekunden Tausende Dokumente durchsuchen. Aber er braucht klare Anweisungen.</p>
+      <div class="alert-box">⚠️ <strong>Wichtig:</strong> KI ist so gut wie deine Anweisungen (Prompts). Garbage in → Garbage out.</div>
+    </div>
+    <div class="section">
+      <div class="section-title">🛠️ KI-Tools im Überblick</div>
+      <div class="tool-grid">
+        <div class="tool-card"><div style="font-size:20px;margin-bottom:6px">🤖</div><div class="tool-name">ChatGPT</div><div class="tool-use">Texte, Planung, Brainstorming</div></div>
+        <div class="tool-card"><div style="font-size:20px;margin-bottom:6px">✍️</div><div class="tool-name">Claude</div><div class="tool-use">Analyse, Dokumente, Berichte</div></div>
+        <div class="tool-card"><div style="font-size:20px;margin-bottom:6px">🔵</div><div class="tool-name">Copilot</div><div class="tool-use">Office-Integration, Teams</div></div>
+        <div class="tool-card"><div style="font-size:20px;margin-bottom:6px">📋</div><div class="tool-name">Notion AI</div><div class="tool-use">Projektdoku, Wikis</div></div>
+        <div class="tool-card"><div style="font-size:20px;margin-bottom:6px">✅</div><div class="tool-name">Asana AI</div><div class="tool-use">Task-Management</div></div>
+        <div class="tool-card"><div style="font-size:20px;margin-bottom:6px">🚀</div><div class="tool-name">ClickUp AI</div><div class="tool-use">Planung, Automatisierung</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">✅ Was kann KI – was nicht?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">KI kann</div>
+          <ul class="checklist">
+            <li>Texte schnell zusammenfassen</li>
+            <li>Projektpläne strukturieren</li>
+            <li>Risiken auflisten (bekannte)</li>
+            <li>E-Mails formulieren</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">KI kann nicht</div>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Projektverantwortung übernehmen</li>
+            <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Stakeholder-Dynamiken spüren</li>
+            <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Immer faktisch korrekt sein</li>
+            <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Vertrauliche Daten sicher speichern</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-sm" onclick="showQuiz1()">Zum Quiz →</button></div>
+  </div>
+  <div id="quiz1" style="display:none">
+    <div class="section">
+      <div class="section-title">❓ Modul 1 – Wissenscheck</div>
+      <div class="quiz-q">Was ist der wichtigste Faktor für ein gutes KI-Ergebnis?</div>
+      <div class="quiz-options" id="q1opts">
+        <button class="quiz-opt" onclick="checkQ1(this,'A')">A) Die Geschwindigkeit der Internetverbindung</button>
+        <button class="quiz-opt" onclick="checkQ1(this,'B')">B) Ein klar formulierter, kontextreicher Prompt</button>
+        <button class="quiz-opt" onclick="checkQ1(this,'C')">C) Die Anzahl der genutzten KI-Tools</button>
+        <button class="quiz-opt" onclick="checkQ1(this,'D')">D) Das Abonnement-Modell des Tools</button>
+      </div>
+      <div id="q1feed" class="quiz-feedback"></div>
+      <div id="q1next" style="display:none">
+        <div class="quiz-q">Was kann KI im Projektmanagement NICHT leisten?</div>
+        <div class="quiz-options" id="q2opts">
+          <button class="quiz-opt" onclick="checkQ2(this,'A')">A) Projektpläne strukturieren</button>
+          <button class="quiz-opt" onclick="checkQ2(this,'B')">B) Statusberichte verfassen</button>
+          <button class="quiz-opt" onclick="checkQ2(this,'C')">C) Stakeholder-Vertrauen aufbauen</button>
+          <button class="quiz-opt" onclick="checkQ2(this,'D')">D) Risikolisten erstellen</button>
+        </div>
+        <div id="q2feed" class="quiz-feedback"></div>
+      </div>
+      <div id="quiz1done" style="display:none">
+        <div class="success-box">✅ Modul 1 abgeschlossen! Du kennst die Grundlagen von KI im PM.</div>
+        <button class="btn" onclick="completeAndNext(1)">Weiter zu Modul 2 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="screen" id="s2">
+  <div class="module-header">
+    <div class="module-eyebrow">Modul 2 · 12 Minuten</div>
+    <div class="module-title">KI für die Projektplanung</div>
+    <div class="module-sub">Lerne, wie du mit gezielten Prompts in Minuten Projektpläne, Milestones und Ressourcenlisten erstellst.</div>
+  </div>
+  <div class="scenario"><strong>Szenario:</strong> Du startest das TechStart-Projekt. In 2 Stunden musst du dem Auftraggeber einen Projektplan vorlegen. Früher hast du dafür 3 Stunden gebraucht. Heute nutzt du KI – und schaffst es in 45 Minuten.</div>
+  <div class="section">
+    <div class="section-title">📋 Was KI bei der Planung übernimmt</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#f8fafc;border-radius:8px;padding:10px 12px;font-size:13px;display:flex;align-items:center;gap:8px">🗂️ Projektstrukturplan (PSP)</div>
+      <div style="background:#f8fafc;border-radius:8px;padding:10px 12px;font-size:13px;display:flex;align-items:center;gap:8px">📌 Milestone-Liste</div>
+      <div style="background:#f8fafc;border-radius:8px;padding:10px 12px;font-size:13px;display:flex;align-items:center;gap:8px">👥 Ressourcenplanung</div>
+      <div style="background:#f8fafc;border-radius:8px;padding:10px 12px;font-size:13px;display:flex;align-items:center;gap:8px">🛡️ Erste Risikoliste</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">💻 Prompt-Struktur: Die 4-Elemente-Formel</div>
+    <div class="prompt-template">
+      <strong style="color:#fff">Rolle:</strong> Du bist ein erfahrener Projektmanager.<br>
+      <strong style="color:#fff">Kontext:</strong> Wir starten ein IT-Projekt (<span>8 Personen</span>, <span>3 Monate</span>, <span>CHF 120k</span>).<br>
+      <strong style="color:#fff">Aufgabe:</strong> Erstelle einen Projektstrukturplan mit den wichtigsten Arbeitspaketen.<br>
+      <strong style="color:#fff">Format:</strong> Nummerierte Liste, max. 3 Ebenen tief, auf Deutsch.
+    </div>
+    <p style="font-size:13px;color:#64748b;margin-top:8px">ℹ️ Diese Struktur liefert konsistent bessere Ergebnisse als einfache Fragen.</p>
+  </div>
+  <div class="section">
+    <div class="section-title">🧪 Prompt-Labor – probiere es aus</div>
+    <p style="font-size:13px;color:#64748b;margin-bottom:12px">Schreibe deinen eigenen Planungs-Prompt. Nutze die 4-Elemente-Formel als Vorlage.</p>
+    <textarea id="promptInput" rows="4" placeholder="Du bist ein erfahrener Projektmanager. Ich plane ein Projekt zum Thema..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-sm" onclick="generatePromptResult()">KI-Antwort simulieren 🤖</button>
+      <button class="btn btn-sm btn-outline" onclick="fillTemplate()">Vorlage laden</button>
+    </div>
+    <div id="promptResult" class="prompt-result" style="margin-top:12px;display:none"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">⭐ 5 Tipps für bessere PM-Prompts</div>
+    <ul class="checklist">
+      <li><strong>Kontext geben:</strong> Budget, Team-Grösse, Branche, Deadline</li>
+      <li><strong>Rolle zuweisen:</strong> "Du bist ein erfahrener IT-Projektleiter"</li>
+      <li><strong>Format vorgeben:</strong> "Als Tabelle", "Max. 10 Punkte", "Auf Deutsch"</li>
+      <li><strong>Beispiele liefern:</strong> "Ähnlich wie bei Projekten in der Finanzbranche"</li>
+      <li><strong>Iterieren:</strong> "Ergänze Punkt 3 um Ressourcenangaben"</li>
+    </ul>
+  </div>
+  <div class="btn-row"><button class="btn" onclick="completeAndNext(2)">Weiter zu Modul 3 →</button></div>
+</div>
+
+<!-- S3 -->
+<div class="screen" id="s3">
+  <div class="module-header">
+    <div class="module-eyebrow">Modul 3 · 12 Minuten</div>
+    <div class="module-title">KI für die Risikoanalyse</div>
+    <div class="module-sub">Entdecke blinde Flecken in deinem Projekt – KI als Brainstorming-Partner für Risiken.</div>
+  </div>
+  <div class="scenario"><strong>Szenario:</strong> Das TechStart-Projekt läuft seit 3 Wochen. Du hast ein ungutes Gefühl, kannst aber nicht genau sagen warum. KI kann dir helfen, blinde Flecken zu finden.</div>
+  <div class="section">
+    <div class="section-title">🧠 Warum KI beim Risiko-Brainstorming hilft</div>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Menschen unterliegen kognitiven Biases: Wir übersehen systematisch bestimmte Risikoarten. KI hat keine solchen Biases – sie kennt Tausende von Projektmustern.</p>
+    <div class="alert-box">⚠️ KI-generierte Risiken müssen immer durch menschliche Expertise bewertet werden. KI liefert Inputs – du triffst die Entscheide.</div>
+  </div>
+  <div class="section">
+    <div class="section-title">🎯 Interaktive Risikomatrix – klicke auf ein Feld</div>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px">X-Achse = Wahrscheinlichkeit (1–5), Y-Achse = Auswirkung (1–5)</p>
+    <div style="display:flex;gap:6px;align-items:flex-end;margin-bottom:4px">
+      <div style="width:70px;font-size:11px;color:#64748b;text-align:right;padding-right:6px;line-height:1.3">Aus&shy;wirkung ↑</div>
+      <div style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:4px" id="riskMatrix"></div>
+    </div>
+    <div style="margin-left:76px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;text-align:center">
+      <div style="font-size:10px;color:#64748b">1</div><div style="font-size:10px;color:#64748b">2</div><div style="font-size:10px;color:#64748b">3</div><div style="font-size:10px;color:#64748b">4</div><div style="font-size:10px;color:#64748b">5</div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#64748b;margin-top:2px">Wahrscheinlichkeit →</div>
+    <p style="font-size:13px;margin-top:8px;font-style:italic;color:#64748b" id="riskInfo">← Wähle ein Risikofeld aus</p>
+  </div>
+  <div class="section">
+    <div class="section-title">💻 KI-Risiko-Prompt für dein Projekt</div>
+    <div class="prompt-template">
+      Analysiere folgendes Projekt auf Risiken:<br>
+      Projektname: <span>TechStart App-Launch</span><br>
+      Team: <span>8 Personen, davon 3 externe</span><br>
+      Budget: <span>CHF 120'000</span>, Dauer: <span>3 Monate</span><br><br>
+      Erstelle eine Risikoliste mit:<br>
+      1. Risikobezeichnung &nbsp; 2. Wahrscheinlichkeit (1–5)<br>
+      3. Auswirkung (1–5) &nbsp;&nbsp;&nbsp; 4. Gegenmassnahme
+    </div>
+    <div style="margin-top:12px;background:#f8fafc;border-radius:10px;padding:14px">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Beispiel KI-Output</div>
+      <div style="font-size:13px;line-height:1.85">
+        <strong>1. Scope Creep</strong> · W: 4/5 · A: 4/5<br>
+        <span style="color:#64748b">→ Massnahme: Klarer Change-Management-Prozess</span><br>
+        <strong>2. Lieferanten-Verzögerung</strong> · W: 3/5 · A: 4/5<br>
+        <span style="color:#64748b">→ Massnahme: Frühzeitige Vertragsklauseln + Backup-Lieferanten</span><br>
+        <strong>3. Ressourcenausfall</strong> · W: 2/5 · A: 5/5<br>
+        <span style="color:#64748b">→ Massnahme: Cross-Training, Wissenstransfer sicherstellen</span>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row"><button class="btn" onclick="completeAndNext(3)">Weiter zu Modul 4 →</button></div>
+</div>
+
+<!-- S4 -->
+<div class="screen" id="s4">
+  <div class="module-header">
+    <div class="module-eyebrow">Modul 4 · 11 Minuten</div>
+    <div class="module-title">KI für Kommunikation & Reporting</div>
+    <div class="module-sub">Statusberichte, Stakeholder-Mails und Meeting-Protokolle – KI erledigt den ersten Entwurf in Sekunden.</div>
+  </div>
+  <div class="scenario"><strong>Szenario:</strong> Freitag, 16:30 Uhr. Der Kunde erwartet ein Statusupdate bis 17:00. Mit KI schaffst du einen professionellen Bericht in 10 Minuten.</div>
+  <div class="section">
+    <div class="section-title">✉️ KI-E-Mail-Generator – probiere es aus</div>
+    <p style="font-size:13px;color:#64748b;margin-bottom:12px">Wähle eine Situation oder beschreibe sie selbst – die KI formuliert die Stakeholder-Mail.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button class="btn btn-sm btn-outline" onclick="fillSituation('Das Projekt ist 2 Wochen hinter dem Zeitplan. Ursache: Lieferverzögerung bei externem Partner. Budget ist eingehalten.')">Zeitverzug</button>
+      <button class="btn btn-sm btn-outline" onclick="fillSituation('Das Projekt liegt im Plan. Milestone 2 wurde erreicht. Budget: 60% verbraucht bei 50% Fortschritt.')">Statusbericht</button>
+      <button class="btn btn-sm btn-outline" onclick="fillSituation('Der Kunde möchte eine neue Funktion hinzufügen. Mehrkosten: CHF 15000.')">Änderungsanfrage</button>
+    </div>
+    <textarea id="situationInput" rows="3" placeholder="Beschreibe deine Projektsituation..."></textarea>
+    <div class="btn-row"><button class="btn btn-sm" onclick="generateEmail()">Mail generieren ✉️</button></div>
+    <div id="emailResult" style="display:none;margin-top:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;font-size:13px;line-height:1.75"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">⚠️ Do's & Don'ts bei KI-Texten</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:8px;text-transform:uppercase">Do's</div>
+        <ul class="checklist">
+          <li>Fakten immer überprüfen</li>
+          <li>Ton an Empfänger anpassen</li>
+          <li>Keine vertraulichen Daten eingeben</li>
+          <li>KI-Text als Entwurf sehen</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:8px;text-transform:uppercase">Don'ts</div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Blind 1:1 übernehmen</li>
+          <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Passwörter oder API-Keys eingeben</li>
+          <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Persönliche Daten von Dritten</li>
+          <li style="padding:5px 0;font-size:14px;display:flex;gap:8px"><span style="color:#dc2626">✗</span>Als Ersatz für menschliches Urteil</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row"><button class="btn" onclick="completeAndNext(4)">Weiter zu Modul 5 →</button></div>
+</div>
+
+<!-- S5 -->
+<div class="screen" id="s5">
+  <div class="module-header">
+    <div class="module-eyebrow">Modul 5 · 8 Minuten</div>
+    <div class="module-title">PM mit vs. ohne KI – Vergleich & Grenzen</div>
+    <div class="module-sub">Wo spart KI wirklich Zeit? Und wo stösst sie an ihre Grenzen?</div>
+  </div>
+  <div class="section">
+    <div class="section-title">📊 Zeitvergleich: 5 PM-Aufgaben (klicken für Details)</div>
+    <div id="compareList"></div>
+    <div id="compareDetail" style="display:none;margin-top:12px;padding:14px;background:#f0f4f8;border-radius:10px;font-size:14px;line-height:1.65;border-left:4px solid #1F4E79"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">🚫 Grenzen der KI im Projektmanagement</div>
+    <ul class="checklist">
+      <li><strong>Halluzinationen:</strong> KI erfindet manchmal plausibel klingende, aber falsche Fakten</li>
+      <li><strong>Kontextblindheit:</strong> KI kennt deine Unternehmenskultur und History nicht</li>
+      <li><strong>Datenschutz:</strong> Keine vertraulichen Kundendaten in Public-KI-Tools eingeben</li>
+      <li><strong>Soziale Intelligenz:</strong> Konflikte, Motivation – da braucht es den Menschen</li>
+      <li><strong>Qualitätsschwankungen:</strong> Schlechte Prompts führen zu schlechten Ergebnissen</li>
+    </ul>
+  </div>
+  <div class="section">
+    <div class="section-title">⭐ 7 goldene Regeln für KI im Projektalltag</div>
+    <div id="goldenRules"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">💬 Reflexion – dein Lerntransfer</div>
+    <p style="font-size:14px;margin-bottom:10px">Was wirst du morgen in deinem Projekt oder Studium anders machen?</p>
+    <textarea id="reflexion" rows="3" placeholder="Schreibe deine persönliche Erkenntnis..."></textarea>
+    <div class="btn-row"><button class="btn" onclick="saveReflexion()">Speichern & weiter →</button></div>
+    <div id="reflexionDone" style="display:none">
+      <div class="success-box">✅ Super! Weiter zum Abschluss-Assessment.</div>
+      <button class="btn" onclick="completeAndNext(5)">Zum Abschluss 🏆</button>
+    </div>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="screen" id="s6">
+  <div class="module-header">
+    <div class="module-eyebrow">Abschluss · 5 Minuten</div>
+    <div class="module-title">Assessment & Zertifikat</div>
+    <div class="module-sub">Teste dein Wissen aus allen 5 Modulen. Du brauchst 70% um das Zertifikat zu erhalten.</div>
+  </div>
+  <div class="section">
+    <div class="section-title">❓ Abschluss-Quiz (5 Fragen)</div>
+    <div id="fqContent"></div>
+    <div id="fqResult" style="display:none"></div>
+  </div>
+  <div id="certArea" style="display:none">
+    <div class="cert">
+      <div class="cert-title">Abschlusszertifikat</div>
+      <div class="cert-main">AI-Powered Project Manager</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:12px">Effizientes Projektmanagement mit KI-Unterstützung</div>
+      <div style="font-size:14px;margin-bottom:4px">Verliehen an</div>
+      <div class="cert-name" id="certName">—</div>
+      <div class="cert-sub">hat das E-Learning erfolgreich abgeschlossen<br>und alle Lernziele erreicht.</div>
+      <div style="margin-top:16px;font-size:13px;color:#64748b">HWZ Hochschule für Wirtschaft Zürich · <span id="certDate"></span></div>
+      <div style="margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:#dbeafe;border-radius:6px;padding:5px 14px;font-size:13px;color:#1e40af">🏆 Bestanden</div>
+    </div>
+    <div style="margin-top:16px">
+      <input type="text" id="nameInput" placeholder="Deinen Namen eingeben für das Zertifikat" style="margin-bottom:10px">
+      <button class="btn btn-sm" onclick="issueCert()">Zertifikat ausstellen 🏆</button>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+</div>
+
+<script>
+var done={};
+var q1done=false,q2done=false;
+
+var riskLabels={'5-1':'Score 5 – Mittleres Risiko: Beobachten','5-2':'Score 10 – Hohes Risiko: Massnahmen planen','5-3':'Score 15 – Sehr hohes Risiko: Sofort handeln!','5-4':'Score 20 – Kritisch!','5-5':'Score 25 – Kritisch! Eskalation nötig','4-1':'Score 4 – Geringes Risiko','4-2':'Score 8 – Mittleres Risiko','4-3':'Score 12 – Hohes Risiko','4-4':'Score 16 – Sehr hohes Risiko','4-5':'Score 20 – Kritisch!','3-1':'Score 3 – Vernachlässigbar','3-2':'Score 6 – Geringes Risiko','3-3':'Score 9 – Mittleres Risiko','3-4':'Score 12 – Hohes Risiko','3-5':'Score 15 – Sehr hohes Risiko','2-1':'Score 2 – Vernachlässigbar','2-2':'Score 4 – Vernachlässigbar','2-3':'Score 6 – Geringes Risiko','2-4':'Score 8 – Mittleres Risiko','2-5':'Score 10 – Hohes Risiko','1-1':'Score 1 – Vernachlässigbar','1-2':'Score 2 – Vernachlässigbar','1-3':'Score 3 – Geringes Risiko','1-4':'Score 4 – Geringes Risiko','1-5':'Score 5 – Mittleres Risiko'};
+
+function buildRiskMatrix(){
+  var m=document.getElementById('riskMatrix');
+  m.innerHTML='';
+  for(var row=5;row>=1;row--){
+    for(var col=1;col<=5;col++){
+      var score=row*col;
+      var cls=score<=4?'risk-low':score<=10?'risk-mid':'risk-high';
+      var c=document.createElement('div');
+      c.className='risk-cell '+cls;
+      c.textContent=score;
+      (function(r,co,sc){
+        c.onclick=function(){
+          document.querySelectorAll('.risk-cell').forEach(function(x){x.classList.remove('risk-selected')});
+          this.classList.add('risk-selected');
+          document.getElementById('riskInfo').textContent='Auswirkung '+r+' × Wahrscheinlichkeit '+co+' = '+riskLabels[r+'-'+co];
+        };
+      })(row,col,score);
+      m.appendChild(c);
+    }
+  }
+}
+
+var compareData=[
+  {task:'Projektstrukturplan erstellen',ohne:'3–4 Std.',mit:'20–30 Min',saving:'↓80%',note:'KI erstellt vollständigen Entwurf in Sekunden – du verfeinerst ihn anschliessend.'},
+  {task:'Wöchentlicher Statusbericht',ohne:'60–90 Min',mit:'10–15 Min',saving:'↓85%',note:'KI formuliert auf Basis deiner Stichworte einen professionellen Bericht.'},
+  {task:'Risikoidentifikation',ohne:'2–3 Std.',mit:'30–45 Min',saving:'↓70%',note:'KI liefert eine umfassende Startliste – du ergänzt mit deiner Erfahrung.'},
+  {task:'Stakeholder-E-Mail',ohne:'20–45 Min',mit:'5–10 Min',saving:'↓75%',note:'KI generiert ersten Entwurf – du passt Ton und Fakten an.'},
+  {task:'Meeting-Protokoll',ohne:'30–60 Min',mit:'5–10 Min',saving:'↓82%',note:'KI strukturiert aus Stichpunkten ein vollständiges Protokoll.'}
+];
+
+function buildCompare(){
+  var el=document.getElementById('compareList');
+  el.innerHTML='';
+  var header=document.createElement('div');
+  header.style.cssText='display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0;margin-bottom:4px';
+  ['Aufgabe','Ohne KI','Mit KI','Ersparnis'].forEach(function(t){
+    var c=document.createElement('div');
+    c.style.cssText='font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;padding:4px 8px';
+    c.textContent=t;
+    header.appendChild(c);
+  });
+  el.appendChild(header);
+  compareData.forEach(function(d,i){
+    var row=document.createElement('div');
+    row.className='compare-item';
+    var bg=i%2===0?'#fff':'#f8fafc';
+    var cells=[
+      {t:d.task,cls:'compare-cell-task',bg:bg},
+      {t:d.ohne,cls:'compare-cell',bg:bg},
+      {t:d.mit,cls:'compare-cell',bg:bg},
+      {t:d.saving,cls:'compare-cell-green',bg:bg}
+    ];
+    cells.forEach(function(cell){
+      var c=document.createElement('div');
+      c.className=cell.cls;
+      c.style.background=cell.bg;
+      c.textContent=cell.t;
+      row.appendChild(c);
+    });
+    row.onclick=(function(data){return function(){
+      var det=document.getElementById('compareDetail');
+      det.style.display='block';
+      det.innerHTML='<strong>'+data.task+'</strong><br>'+data.note+'<br><span style="color:#64748b;font-size:12px">Zeitersparnis: '+data.saving+'</span>';
+    }})(d);
+    el.appendChild(row);
+  });
+}
+
+var goldenRulesData=['Prompt-Qualität entscheidet: Investiere Zeit in gute Anweisungen','Faktencheck immer: KI halluziniert – du bist verantwortlich','Datenschutz zuerst: Keine Kundendaten in Public-KI-Tools','KI als Entwurf: Nie ohne Überarbeitung direkt verwenden','Iterieren: Verfeinere den Output mit Folgefragen','Grenzen kennen: Bei komplexen Urteilen den Menschen einbeziehen','Dokumentieren: Screenshot-Protokoll für Nachvollziehbarkeit'];
+
+function buildGoldenRules(){
+  var el=document.getElementById('goldenRules');
+  el.innerHTML='';
+  goldenRulesData.forEach(function(r,i){
+    var d=document.createElement('div');
+    d.className='golden-item';
+    d.innerHTML='<div class="golden-num">'+(i+1)+'</div><div>'+r+'</div>';
+    el.appendChild(d);
+  });
+}
+
+var finalQs=[
+  {q:'Welche Struktur liefert die besten KI-Prompts?',opts:['Einfache Frage stellen','Rolle + Kontext + Aufgabe + Format','Möglichst lange Texte schreiben','Auf Englisch prompten'],correct:1},
+  {q:'Was bedeutet "Halluzination" bei KI?',opts:['KI träumt','KI generiert plausibel klingende, aber falsche Informationen','KI ist offline','KI antwortet zu langsam'],correct:1},
+  {q:'Welche Daten solltest du NICHT in Public-KI-Tools eingeben?',opts:['Projektnamen','Vertrauliche Kundendaten und Passwörter','Allgemeine Aufgabenbeschreibungen','Öffentliche Informationen'],correct:1},
+  {q:'Wie viel Zeit spart KI typischerweise beim Erstellen von Statusberichten?',opts:['10–20%','30–40%','75–85%','100% – KI macht alles selbst'],correct:2},
+  {q:'Was ist die wichtigste Regel nach dem Generieren eines KI-Texts?',opts:['Sofort abschicken','Auf bessere KI warten','Fakten prüfen und Text anpassen','Prompt löschen'],correct:2}
+];
+var fqIndex=0,fqScore=0;
+
+function buildFinalQuiz(){fqIndex=0;fqScore=0;showFQ();}
+
+function showFQ(){
+  var area=document.getElementById('fqContent');
+  if(fqIndex>=finalQs.length){showFQResult();return;}
+  var q=finalQs[fqIndex];
+  area.innerHTML='<div style="font-size:12px;color:#64748b;margin-bottom:12px">Frage '+(fqIndex+1)+' von '+finalQs.length+'</div>';
+  var qEl=document.createElement('div');
+  qEl.className='quiz-q';qEl.textContent=q.q;area.appendChild(qEl);
+  var opts=document.createElement('div');opts.className='quiz-options';
+  q.opts.forEach(function(o,i){
+    var b=document.createElement('button');b.className='quiz-opt';b.textContent=o;
+    b.onclick=function(){
+      opts.querySelectorAll('.quiz-opt').forEach(function(x){x.disabled=true});
+      if(i===q.correct){b.classList.add('correct');fqScore++;}
+      else{b.classList.add('wrong');opts.querySelectorAll('.quiz-opt')[q.correct].classList.add('correct');}
+      setTimeout(function(){fqIndex++;showFQ();},900);
+    };
+    opts.appendChild(b);
+  });
+  area.appendChild(opts);
+}
+
+function showFQResult(){
+  document.getElementById('fqContent').innerHTML='';
+  var pct=Math.round(fqScore/finalQs.length*100);
+  var passed=pct>=70;
+  var res=document.getElementById('fqResult');
+  res.style.display='block';
+  res.innerHTML='<div class="score-display"><div class="score-big">'+pct+'%</div><div class="score-label">'+fqScore+' von '+finalQs.length+' richtig</div></div>';
+  if(passed){
+    res.innerHTML+='<div class="success-box">✅ <strong>Bestanden!</strong> Herzlichen Glückwunsch – du hast alle Lernziele erreicht.</div>';
+    document.getElementById('certArea').style.display='block';
+    document.getElementById('certDate').textContent=new Date().toLocaleDateString('de-CH');
+    completeAndNext(6);
+  }else{
+    res.innerHTML+='<div class="alert-box">⚠️ <strong>Knapp nicht bestanden.</strong> Du brauchst 70%. Wiederhole die Module und versuche es erneut.</div>';
+    res.innerHTML+='<button class="btn btn-sm btn-outline" onclick="buildFinalQuiz()" style="margin-top:8px">Nochmal versuchen</button>';
+  }
+}
+
+function issueCert(){
+  var n=document.getElementById('nameInput').value.trim();
+  if(!n){alert('Bitte deinen Namen eingeben.');return;}
+  document.getElementById('certName').textContent=n;
+}
+
+function goTo(i){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  document.getElementById('s'+i).classList.add('active');
+  document.querySelectorAll('.sidebar-module').forEach(function(s){s.classList.remove('active')});
+  var nav=document.getElementById('nav-'+i);
+  if(nav)nav.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function completeAndNext(i){
+  done[i]=true;
+  var dot=document.getElementById('dot-'+i);
+  if(dot)dot.textContent='✓';
+  var nav=document.getElementById('nav-'+i);
+  if(nav){nav.classList.add('done');nav.classList.remove('active');}
+  updateProgress();
+  if(i<6)goTo(i+1);
+}
+
+function updateProgress(){
+  var count=Object.keys(done).length;
+  document.getElementById('globalBar').style.width=Math.round(count/7*100)+'%';
+  document.getElementById('globalLabel').textContent=count+' / 7';
+}
+
+function showQuiz1(){
+  document.getElementById('m1-p1').style.display='none';
+  document.getElementById('quiz1').style.display='block';
+  document.getElementById('m1prog').style.width='50%';
+  document.getElementById('m1step').textContent='Quiz';
+}
+
+function checkQ1(btn,ans){
+  if(q1done)return;q1done=true;
+  document.querySelectorAll('#q1opts .quiz-opt').forEach(function(b){b.disabled=true});
+  var feed=document.getElementById('q1feed');
+  if(ans==='B'){btn.classList.add('correct');feed.className='quiz-feedback correct';feed.textContent='✓ Richtig! Ein klar formulierter, kontextreicher Prompt ist entscheidend.';}
+  else{btn.classList.add('wrong');document.querySelectorAll('#q1opts .quiz-opt')[1].classList.add('correct');feed.className='quiz-feedback wrong';feed.textContent='✗ Die richtige Antwort ist B: Ein klar formulierter, kontextreicher Prompt.';}
+  document.getElementById('m1prog').style.width='75%';
+  setTimeout(function(){document.getElementById('q1next').style.display='block';},600);
+}
+
+function checkQ2(btn,ans){
+  if(q2done)return;q2done=true;
+  document.querySelectorAll('#q2opts .quiz-opt').forEach(function(b){b.disabled=true});
+  var feed=document.getElementById('q2feed');
+  if(ans==='C'){btn.classList.add('correct');feed.className='quiz-feedback correct';feed.textContent='✓ Richtig! Stakeholder-Vertrauen erfordert menschliche soziale Kompetenz.';}
+  else{btn.classList.add('wrong');document.querySelectorAll('#q2opts .quiz-opt')[2].classList.add('correct');feed.className='quiz-feedback wrong';feed.textContent='✗ Die richtige Antwort ist C: Stakeholder-Vertrauen aufbauen.';}
+  document.getElementById('m1prog').style.width='100%';
+  document.getElementById('m1step').textContent='2/2';
+  setTimeout(function(){document.getElementById('quiz1done').style.display='block';},600);
+}
+
+function generatePromptResult(){
+  var inp=document.getElementById('promptInput').value;
+  var res=document.getElementById('promptResult');
+  res.style.display='block';res.style.fontStyle='normal';res.style.color='#1a1a2e';
+  if(inp.length<20){res.textContent='Bitte gib einen ausführlicheren Prompt ein (nutze die 4-Elemente-Formel).';res.style.color='#dc2626';return;}
+  var hasRole=inp.toLowerCase().includes('du bist')||inp.toLowerCase().includes('als ');
+  var output='<div style="color:#15803d;margin-bottom:8px">'+(hasRole?'✓ Guter Prompt! Rolle ist definiert.':'⚠️ Tipp: Weise der KI eine Rolle zu für bessere Ergebnisse.')+'</div>';
+  output+='<strong>ChatGPT-Antwort (simuliert):</strong><br><br>';
+  output+='Projektstrukturplan – TechStart App-Launch<br><br>';
+  output+='1. Initialisierung<br>&nbsp;&nbsp;1.1 Kick-off Meeting<br>&nbsp;&nbsp;1.2 Stakeholder-Analyse<br>&nbsp;&nbsp;1.3 Anforderungen erheben<br>';
+  output+='2. Planung<br>&nbsp;&nbsp;2.1 Projektplan erstellen<br>&nbsp;&nbsp;2.2 Ressourcen zuweisen<br>&nbsp;&nbsp;2.3 Budget aufteilen<br>';
+  output+='3. Durchführung<br>&nbsp;&nbsp;3.1 Entwicklungs-Sprints<br>&nbsp;&nbsp;3.2 Testing & QA<br>';
+  output+='4. Abschluss<br>&nbsp;&nbsp;4.1 Abnahme<br>&nbsp;&nbsp;4.2 Projektdokumentation';
+  res.innerHTML=output;
+}
+
+function fillTemplate(){
+  document.getElementById('promptInput').value="Du bist ein erfahrener Projektmanager mit 10 Jahren IT-Erfahrung.\n\nKontext: Ich plane ein App-Entwicklungsprojekt mit 8 Personen, Budget CHF 120'000, Dauer 3 Monate.\n\nAufgabe: Erstelle einen vollständigen Projektstrukturplan.\n\nFormat: Nummerierte Liste, 3 Ebenen, auf Deutsch, max. 20 Punkte.";
+}
+
+var emailTemplates={
+  'zeitverzug':'<strong>Betreff: Projektupdate TechStart – Zeitverzögerung & Massnahmenplan</strong><br><br>Guten Tag [Auftraggeber]<br><br>Ich informiere Sie über eine Verzögerung im Projekt TechStart App-Launch.<br><br><strong>Situation:</strong> Das Projekt liegt aktuell 2 Wochen hinter dem geplanten Zeitplan. Ursache ist eine unerwartete Lieferverzögerung beim externen Partner.<br><br><strong>Aktueller Stand:</strong><br>• Budget: Eingehalten ✓<br>• Zeitplan: –2 Wochen ⚠️<br>• Scope: Vollständig ✓<br><br><strong>Massnahmen:</strong><br>1. Tägliches Follow-up mit externem Partner<br>2. Prüfung eines alternativen Lieferanten<br>3. Ressourcen intern aufgestockt<br><br>Neue Endterminprognose: [Datum +2 Wochen]<br><br>Für Rückfragen stehe ich jederzeit zur Verfügung.<br><br>Freundliche Grüsse<br>[Name], Projektleiterin',
+  'status':'<strong>Betreff: Wöchentlicher Statusbericht – TechStart App-Launch</strong><br><br>Guten Tag [Auftraggeber]<br><br><strong>Zusammenfassung:</strong> Das Projekt liegt im Plan. Milestone 2 wurde planmässig erreicht.<br><br><strong>Kennzahlen:</strong><br>• Budget: 60% verbraucht (bei 50% Fortschritt) ✓<br>• Zeitplan: Im Plan ✓<br>• Nächster Milestone: Sprint 3 Start Montag<br><br>Mit freundlichen Grüssen<br>[Name], Projektleiterin',
+  'aenderung':'<strong>Betreff: Änderungsantrag #001 – Neue Funktionalität TechStart</strong><br><br>Guten Tag [Auftraggeber]<br><br>Formale Bewertung Ihrer Änderungsanfrage:<br><br><strong>Änderung:</strong> Neue Funktion [Beschreibung]<br><strong>Aufwand:</strong> ca. 80 Stunden<br><strong>Mehrkosten:</strong> CHF 15\'000<br><strong>Zeitverzögerung:</strong> ca. 1–2 Wochen<br><br><strong>Empfehlung:</strong> Umsetzung möglich bei Anpassung von Budget oder Scope.<br><br>Bitte um Ihre schriftliche Genehmigung bis [Datum].<br><br>Freundliche Grüsse<br>[Name], Projektleiterin'
+};
+
+function fillSituation(text){document.getElementById('situationInput').value=text;}
+
+function generateEmail(){
+  var inp=document.getElementById('situationInput').value.toLowerCase();
+  var res=document.getElementById('emailResult');
+  res.style.display='block';
+  var key='status';
+  if(inp.includes('hinter')||inp.includes('verzug')||inp.includes('verz'))key='zeitverzug';
+  else if(inp.includes('nderung')||inp.includes('funktion')||inp.includes('15000'))key='aenderung';
+  res.innerHTML='<div style="font-size:11px;color:#64748b;margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">KI-generierter Entwurf (bitte anpassen)</div>'+emailTemplates[key];
+}
+
+function saveReflexion(){
+  var t=document.getElementById('reflexion').value.trim();
+  if(t.length<10){alert('Bitte schreibe mindestens einen Satz.');return;}
+  document.getElementById('reflexionDone').style.display='block';
+}
+
+function init(){buildRiskMatrix();buildCompare();buildGoldenRules();buildFinalQuiz();}
+window.onload=init;
+</script>
+</body>
+</html>

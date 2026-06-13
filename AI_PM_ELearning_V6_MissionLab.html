@@ -1,0 +1,3042 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI-Powered Project Manager | Mission Lab TechStart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM – "Mission Control Dark" × "Clean Dashboard Light"
+   Primary: Deep Navy #0D1B2A · Accent: Electric Cyan #00D4FF
+   Signal: Amber #FFB020 · Danger: Coral #FF4757 · Success: Mint #00C896
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --navy: #0D1B2A;
+  --navy2: #162335;
+  --navy3: #1E3048;
+  --cyan: #00D4FF;
+  --cyan2: #00AACF;
+  --amber: #FFB020;
+  --coral: #FF4757;
+  --mint: #00C896;
+  --purple: #8B5CF6;
+  --bg: #F4F7FB;
+  --bgcard: #FFFFFF;
+  --ink: #0D1B2A;
+  --ink2: #3D5166;
+  --ink3: #6B8299;
+  --line: #E2EAF2;
+  --line2: #C8D8E8;
+  --amber-bg: #FFF8E6;
+  --coral-bg: #FFF1F2;
+  --mint-bg: #E6FBF5;
+  --cyan-bg: #E6FBFF;
+  --purple-bg: #F0ECFF;
+  --shadow-sm: 0 2px 8px rgba(13,27,42,.06);
+  --shadow-md: 0 8px 28px rgba(13,27,42,.1);
+  --shadow-lg: 0 20px 60px rgba(13,27,42,.14);
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea, select { font: inherit; }
+img, svg { display: block; max-width: 100%; }
+
+/* ─── App Shell ─── */
+.app { max-width: 1440px; margin: 0 auto; min-height: 100vh; }
+
+/* ─── Top Bar ─── */
+.topbar {
+  min-height: 60px;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 24px rgba(0,0,0,.3);
+  border-bottom: 1px solid rgba(0,212,255,.15);
+  gap: 16px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.brand {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -.3px;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.brand-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.brand-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-sub { opacity: .45; font-weight: 400; font-size: 14px; white-space: nowrap; flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
+.topmeta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; overflow: hidden; }
+.xp-badge {
+  background: linear-gradient(135deg, rgba(0,212,255,.18), rgba(139,92,246,.18));
+  border: 1px solid rgba(0,212,255,.3);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--cyan);
+  font-family: var(--font-display);
+  transition: .2s;
+}
+.progress-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 1; min-width: 80px; }
+.progress-bar {
+  width: 120px; height: 6px;
+  min-width: 60px;
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 1;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 999px;
+  width: 0%;
+  transition: width .4s ease;
+}
+.module-counter {
+  font-size: 13px;
+  color: rgba(255,255,255,.5);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge-rack { display: flex; gap: 3px; flex-shrink: 1; overflow: hidden; }
+.badge-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  opacity: .35;
+  transition: .2s;
+  cursor: default;
+}
+.badge-icon.earned { opacity: 1; background: rgba(0,212,255,.15); }
+
+/* ─── Layout ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 60px);
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  background: var(--bgcard);
+  border-right: 1px solid var(--line);
+  padding: 20px 14px;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  min-width: 0;
+}
+.sidebar-section { margin-bottom: 8px; }
+.sidebar-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ink3);
+  font-weight: 700;
+  padding: 6px 10px 4px;
+  font-family: var(--font-display);
+}
+.navitem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  margin-bottom: 2px;
+  cursor: pointer;
+  color: var(--ink2);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all .15s ease;
+  position: relative;
+  min-width: 0;
+}
+.navitem > div:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.navitem:hover { background: var(--bg); color: var(--ink); }
+.navitem.active {
+  background: linear-gradient(135deg, rgba(0,212,255,.08), rgba(139,92,246,.06));
+  border-color: rgba(0,212,255,.2);
+  color: var(--navy);
+  font-weight: 700;
+}
+.navitem.done { color: var(--mint); }
+.navitem.locked { opacity: .4; cursor: not-allowed; }
+.nav-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  color: var(--ink3);
+  transition: .15s;
+}
+.navitem.active .nav-dot { background: var(--navy); color: white; }
+.navitem.done .nav-dot { background: var(--mint); color: white; }
+.nav-xp {
+  margin-left: auto;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--amber);
+  opacity: 0;
+  transition: .15s;
+}
+.navitem.done .nav-xp { opacity: 1; }
+
+/* ─── Content Area ─── */
+.content { padding: 36px 40px; max-width: 1100px; min-width: 0; overflow-wrap: break-word; }
+.screen { display: none; }
+.screen.active {
+  display: block;
+  animation: screenIn .3s ease;
+}
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Base Cards ─── */
+.card {
+  background: var(--bgcard);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+.card-mission {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy3) 100%);
+  border: 1px solid rgba(0,212,255,.2);
+  color: white;
+  border-radius: var(--r-xl);
+  padding: 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.card-mission::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,212,255,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.card-mission::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 40%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(139,92,246,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.card-theory {
+  background: linear-gradient(135deg, #F9FBFF, #F0F5FF);
+  border-color: #D8E4F5;
+}
+.card-case {
+  background: linear-gradient(135deg, var(--amber-bg), #FFFDF0);
+  border-color: #F0D070;
+}
+.card-activity {
+  background: linear-gradient(135deg, var(--mint-bg), #F0FDF9);
+  border-color: #A0E8D8;
+}
+.card-danger {
+  background: var(--coral-bg);
+  border-left: 4px solid var(--coral);
+  border-color: #FFD0D5;
+}
+.card-warning {
+  background: var(--amber-bg);
+  border-left: 4px solid var(--amber);
+}
+.card-success {
+  background: var(--mint-bg);
+  border-left: 4px solid var(--mint);
+}
+.card-info {
+  background: var(--cyan-bg);
+  border-left: 4px solid var(--cyan2);
+}
+
+/* ─── Typography ─── */
+.eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  font-weight: 700;
+  font-family: var(--font-display);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.eyebrow::before {
+  content: '';
+  width: 18px; height: 2px;
+  background: var(--cyan);
+  border-radius: 1px;
+}
+.card-mission .eyebrow { color: rgba(0,212,255,.8); }
+.card-mission .eyebrow::before { background: rgba(0,212,255,.6); }
+.card-case .eyebrow { color: #A06000; }
+.card-case .eyebrow::before { background: var(--amber); }
+.card-activity .eyebrow { color: #008060; }
+.card-activity .eyebrow::before { background: var(--mint); }
+
+h1.page-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.5px;
+  margin-bottom: 14px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.card-mission h1 { color: #fff; font-size: 34px; }
+
+h2.section-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+.card-mission h2 { color: rgba(255,255,255,.9); }
+
+.lead {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(255,255,255,.75);
+  margin-bottom: 16px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink2);
+}
+.text-sm { font-size: 13px; color: var(--ink3); line-height: 1.6; }
+
+/* ─── Grid Layouts ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.grid-hero { display: grid; grid-template-columns: 1.3fr .9fr; gap: 24px; align-items: stretch; }
+.grid-stat { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+
+/* ─── Mini Cards ─── */
+.mini {
+  background: rgba(255,255,255,.7);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px;
+}
+.card-mission .mini {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.12);
+}
+.mini h4 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
+  word-break: break-word;
+}
+.card-mission .mini h4 { color: rgba(255,255,255,.9); }
+.mini p, .mini li { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+.card-mission .mini p { color: rgba(255,255,255,.65); }
+.mini ul { list-style: none; }
+.mini ul li { padding: 4px 0; }
+.mini ul li::before { content: '→ '; color: var(--cyan); font-weight: 700; }
+
+/* ─── Stat Cards ─── */
+.stat {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--r-md);
+  padding: 16px 12px;
+  text-align: center;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--cyan);
+  display: block;
+}
+.stat-label { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 4px; word-break: break-word; line-height: 1.3; }
+
+/* ─── Buttons ─── */
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--r-md);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  transition: all .18s ease;
+  font-family: var(--font-body);
+  text-decoration: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), var(--cyan2));
+  color: var(--navy);
+  box-shadow: 0 4px 16px rgba(0,212,255,.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,212,255,.4);
+}
+.btn-secondary {
+  background: var(--bgcard);
+  color: var(--navy);
+  border: 1.5px solid var(--line2);
+  box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover { border-color: var(--cyan2); background: var(--cyan-bg); }
+.btn-ghost { background: rgba(255,255,255,.1); color: white; border: 1px solid rgba(255,255,255,.2); }
+.btn-ghost:hover { background: rgba(255,255,255,.18); }
+.btn-danger { background: var(--coral); color: white; }
+.btn-sm { padding: 8px 16px; font-size: 14px; }
+
+/* ─── Tags & Pills ─── */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.tag {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: .3px;
+}
+.tag-cyan { background: rgba(0,212,255,.12); color: var(--cyan2); border: 1px solid rgba(0,212,255,.2); }
+.tag-amber { background: rgba(255,176,32,.12); color: #A06000; border: 1px solid rgba(255,176,32,.25); }
+.tag-mint { background: rgba(0,200,150,.1); color: #007F60; border: 1px solid rgba(0,200,150,.2); }
+.tag-coral { background: rgba(255,71,87,.1); color: #C0001A; border: 1px solid rgba(255,71,87,.2); }
+.tag-purple { background: rgba(139,92,246,.1); color: #6B3FC8; border: 1px solid rgba(139,92,246,.2); }
+
+/* ─── Stakeholder Map ─── */
+.stakeholder-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.stake-grid-labels {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr;
+  grid-template-rows: 1fr 1fr 40px;
+  gap: 4px;
+  height: 100%;
+}
+.stake-quadrant {
+  border-radius: var(--r-sm);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: .15s;
+  border: 1px solid transparent;
+}
+.stake-quadrant:hover { transform: scale(1.02); }
+.q-manage { background: rgba(255,71,87,.08); border-color: rgba(255,71,87,.15); }
+.q-satisfy { background: rgba(0,212,255,.06); border-color: rgba(0,212,255,.12); }
+.q-monitor { background: rgba(255,176,32,.06); border-color: rgba(255,176,32,.12); }
+.q-inform { background: rgba(0,200,150,.06); border-color: rgba(0,200,150,.12); }
+.q-label { font-size: 11px; font-weight: 800; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 1px; }
+.stake-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: .15s;
+}
+.stake-chip:hover { border-color: var(--cyan2); box-shadow: 0 4px 12px rgba(0,212,255,.15); }
+.stake-chip.active { border-color: var(--cyan); background: var(--cyan-bg); }
+.axis-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink3);
+  text-align: center;
+  writing-mode: horizontal-tb;
+  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.axis-vert { writing-mode: vertical-rl; transform: rotate(180deg); }
+
+/* ─── Quote / Speech Bubble ─── */
+.speech-bubble {
+  background: var(--bgcard);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  position: relative;
+  margin-top: 16px;
+  line-height: 1.65;
+  font-size: 15px;
+  box-shadow: var(--shadow-sm);
+  transition: .2s;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.speech-bubble::before {
+  content: '"';
+  font-family: Georgia, serif;
+  font-size: 48px;
+  color: var(--cyan);
+  opacity: .3;
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  line-height: 1;
+}
+.speech-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-top: 12px;
+}
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.avatar-lea { background: linear-gradient(135deg, #FF6B9D, #C44BCF); }
+.avatar-marco { background: linear-gradient(135deg, #4FACFE, #00F2FE); }
+.avatar-nina { background: linear-gradient(135deg, #43E97B, #38F9D7); }
+.avatar-sam { background: linear-gradient(135deg, #FFA62E, #EA4D2C); }
+.speaker-name { font-weight: 700; font-size: 14px; }
+.speaker-role { font-size: 12px; color: var(--ink3); }
+
+/* ─── Choices / Decision Cards ─── */
+.choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 16px 0; }
+.choice-card {
+  border: 2px solid var(--line);
+  background: var(--bgcard);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: all .18s ease;
+  min-height: 90px;
+  position: relative;
+  overflow: visible;
+  word-break: break-word;
+}
+.choice-card:hover { border-color: var(--cyan2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,.12); }
+.choice-card.selected { border-color: var(--navy); background: rgba(13,27,42,.04); }
+.choice-card.correct {
+  border-color: var(--mint);
+  background: var(--mint-bg);
+  box-shadow: 0 0 0 3px rgba(0,200,150,.15);
+}
+.choice-card.wrong {
+  border-color: var(--coral);
+  background: var(--coral-bg);
+  box-shadow: 0 0 0 3px rgba(255,71,87,.12);
+}
+.choice-card b { display: block; font-size: 15px; margin-bottom: 6px; font-weight: 700; }
+.choice-card span { font-size: 13px; color: var(--ink3); line-height: 1.5; }
+.choice-letter {
+  position: absolute;
+  top: 10px; right: 12px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  color: var(--ink3);
+  font-family: var(--font-mono);
+}
+.feedback-box {
+  display: none;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  margin-top: 14px;
+  line-height: 1.65;
+  font-size: 15px;
+  border: 1px solid var(--line);
+  background: var(--bgcard);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.feedback-box.show { display: block; animation: screenIn .2s ease; }
+.feedback-correct { background: var(--mint-bg); border-color: rgba(0,200,150,.3); }
+.feedback-wrong { background: var(--amber-bg); border-color: rgba(255,176,32,.3); }
+
+/* ─── Prompt Box ─── */
+.prompt-terminal {
+  background: var(--navy);
+  color: #E2EAF2;
+  border-radius: var(--r-lg);
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 14px 0;
+  position: relative;
+  border: 1px solid rgba(0,212,255,.15);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+.prompt-terminal::before {
+  content: 'PROMPT TEMPLATE';
+  position: absolute;
+  top: 10px; right: 16px;
+  font-size: 10px;
+  color: rgba(0,212,255,.4);
+  letter-spacing: 2px;
+  font-family: var(--font-display);
+}
+.prompt-key { color: var(--cyan); font-weight: 600; }
+.prompt-val {
+  background: rgba(255,255,255,.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #B8FFE6;
+}
+textarea.prompt-input {
+  width: 100%;
+  min-height: 140px;
+  border: 2px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px;
+  background: var(--bgcard);
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+  transition: .15s;
+  margin-top: 12px;
+}
+textarea.prompt-input:focus { border-color: var(--cyan2); outline: none; box-shadow: 0 0 0 4px rgba(0,212,255,.08); }
+
+/* ─── Drag & Drop ─── */
+.drag-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: var(--r-md);
+  border: 1px dashed var(--line2);
+  min-height: 70px;
+  margin-bottom: 16px;
+}
+.drag-item {
+  background: var(--bgcard);
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  cursor: grab;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: all .15s ease;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.drag-item:hover { border-color: var(--cyan2); box-shadow: 0 6px 16px rgba(0,212,255,.15); transform: translateY(-1px); }
+.drag-item:active { cursor: grabbing; transform: scale(1.03); }
+.drag-item.dragging { opacity: .4; transform: rotate(2deg); }
+.drop-zone {
+  min-height: 100px;
+  background: rgba(255,255,255,.6);
+  border: 2px dashed var(--line2);
+  border-radius: var(--r-md);
+  padding: 14px;
+  transition: all .15s ease;
+}
+.drop-zone.over { border-color: var(--cyan); background: var(--cyan-bg); }
+.drop-zone h5 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink3);
+  text-align: center;
+  margin-bottom: 10px;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ─── Roadmap / Timeline ─── */
+.roadmap-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 28px 20px;
+  background: linear-gradient(135deg, var(--navy), var(--navy3));
+  border-radius: var(--r-xl);
+  margin: 16px 0;
+  overflow: hidden;
+
+  overflow-x: auto;
+}
+.roadmap-track::before {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 50%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 2px;
+  opacity: .3;
+  z-index: 0;
+}
+.road-slot {
+  position: relative;
+  z-index: 1;
+  min-height: 150px;
+  background: rgba(255,255,255,.06);
+  border: 2px dashed rgba(255,255,255,.15);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  transition: all .15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.road-slot.over { border-color: var(--cyan); background: rgba(0,212,255,.08); }
+.road-slot-label {
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.road-slot-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  color: var(--navy);
+  font-weight: 900;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 6px;
+  font-family: var(--font-mono);
+}
+.phase-card {
+  background: rgba(255,255,255,.95);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  cursor: grab;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  transition: all .15s ease;
+  word-break: break-word;
+}
+.phase-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+.phase-card b { display: block; color: var(--navy); margin-bottom: 3px; white-space: normal; }
+.phase-card span { font-size: 12px; color: var(--ink2); font-weight: 400; white-space: normal; }
+.phase-bank {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* ─── Risk Matrix ─── */
+.risk-matrix-wrap { overflow-x: auto; margin: 16px 0; }
+.risk-matrix {
+  display: grid;
+  grid-template-columns: 36px repeat(5, 1fr);
+  grid-template-rows: repeat(5, 56px) 36px;
+  gap: 4px;
+  min-width: 340px;
+}
+.risk-cell {
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all .15s ease;
+  position: relative;
+}
+.risk-cell:hover { transform: scale(1.08); z-index: 2; }
+.risk-cell.r-low { background: rgba(0,200,150,.15); color: #007F60; border: 1px solid rgba(0,200,150,.2); }
+.risk-cell.r-mid { background: rgba(255,176,32,.15); color: #A06000; border: 1px solid rgba(255,176,32,.25); }
+.risk-cell.r-high { background: rgba(255,71,87,.15); color: #C0001A; border: 1px solid rgba(255,71,87,.2); }
+.risk-cell.r-critical { background: rgba(255,71,87,.3); color: #9B0010; border: 1px solid rgba(255,71,87,.4); }
+.risk-cell.selected { outline: 3px solid var(--navy); outline-offset: 2px; z-index: 3; }
+.risk-axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink3);
+  font-family: var(--font-display);
+}
+.risk-axis.vert { writing-mode: vertical-rl; transform: rotate(180deg); }
+
+/* ─── Kanban ─── */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+.kanban-col {
+  background: var(--bg);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  min-height: 200px;
+  border: 1px solid var(--line);
+}
+.kanban-col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.kanban-col-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.kanban-count {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--line);
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+.kanban-task {
+  background: var(--bgcard);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  transition: .15s;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.kanban-task:hover { box-shadow: var(--shadow-md); border-color: var(--cyan2); }
+.kanban-task .task-meta { font-size: 11px; color: var(--ink3); margin-top: 6px; display: flex; gap: 8px; align-items: center; }
+.task-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+/* ─── Tool Cards ─── */
+.tool-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 16px 0; }
+.tool-card {
+  background: var(--bgcard);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition: all .18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.tool-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--line2); }
+.tool-card.active { border-color: var(--cyan2); box-shadow: 0 8px 28px rgba(0,212,255,.15); }
+.tool-logo {
+  width: 44px; height: 44px;
+  border-radius: var(--r-sm);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.tool-name { font-family: var(--font-display); font-size: 16px; font-weight: 800; margin-bottom: 4px; word-break: break-word; }
+.tool-tagline { font-size: 13px; color: var(--ink3); margin-bottom: 10px; }
+.tool-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.65; color: var(--ink2); }
+.tool-card.active .tool-detail { display: block; animation: screenIn .2s ease; }
+
+/* ─── Checklist ─── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink2);
+  border-bottom: 1px solid var(--line);
+}
+.checklist li:last-child { border: none; }
+.check-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--mint-bg);
+  border: 1.5px solid var(--mint);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--mint);
+  font-weight: 900;
+  margin-top: 1px;
+}
+.cross-icon {
+  background: var(--coral-bg);
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+/* ─── Timeline ─── */
+.timeline-list { display: grid; gap: 10px; margin: 14px 0; }
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 8px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.timeline-week {
+  background: var(--navy);
+  color: white;
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--cyan);
+}
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  margin-top: 10px;
+  box-shadow: 0 0 0 3px rgba(0,212,255,.15);
+  flex-shrink: 0;
+}
+.timeline-content { background: var(--bgcard); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; word-break: break-word; min-width: 0; }
+.timeline-content b { font-size: 15px; display: block; margin-bottom: 3px; }
+.timeline-content span { font-size: 13px; color: var(--ink3); line-height: 1.5; }
+
+/* ─── Score / Certificate ─── */
+.score-circle {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  display: grid;
+  place-items: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 12px 40px rgba(0,212,255,.3);
+}
+.score-number { font-family: var(--font-display); font-size: 36px; font-weight: 900; color: white; }
+
+.certificate {
+  background: linear-gradient(135deg, var(--navy) 0%, #1A2F4A 100%);
+  border-radius: var(--r-xl);
+  padding: 36px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0,212,255,.2);
+  box-shadow: var(--shadow-lg);
+  margin-top: 20px;
+}
+.certificate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(0,212,255,0.08)'/%3E%3C/svg%3E");
+  opacity: .5;
+}
+.cert-badge {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amber), var(--coral));
+  display: grid;
+  place-items: center;
+  font-size: 36px;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 30px rgba(255,176,32,.4);
+  position: relative;
+}
+.cert-title { font-family: var(--font-display); font-size: 28px; font-weight: 900; color: white; margin-bottom: 8px; word-break: break-word; }
+.cert-name { font-family: var(--font-display); font-size: 22px; color: var(--cyan); margin: 16px 0 6px; font-weight: 800; }
+.cert-subtitle { color: rgba(255,255,255,.6); font-size: 15px; }
+
+/* ─── Mission Complete ─── */
+.mission-complete {
+  background: linear-gradient(135deg, var(--mint-bg), #EFFFFA);
+  border: 2px solid var(--mint);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  text-align: center;
+  display: none;
+  margin-top: 20px;
+  animation: popIn .4s cubic-bezier(.17,.67,.35,1.2);
+}
+.mission-complete.show { display: block; }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+.mc-emoji { font-size: 52px; margin-bottom: 12px; }
+.mc-title { font-family: var(--font-display); font-size: 22px; font-weight: 900; color: #007F60; margin-bottom: 6px; }
+.mc-xp { font-size: 18px; font-weight: 700; color: var(--mint); font-family: var(--font-mono); }
+
+/* ─── Intro Hero Screen ─── */
+.intro-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: stretch; margin-bottom: 24px; }
+.intro-modules {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+.intro-module {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--r-md);
+  padding: 14px;
+  text-align: center;
+}
+.intro-module-icon { font-size: 24px; margin-bottom: 6px; }
+.intro-module-name { font-size: 12px; color: rgba(255,255,255,.65); font-weight: 600; word-break: break-word; line-height: 1.4; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 3px; }
+
+/* ─── Utility ─── */
+.hidden { display: none !important; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-16 { margin-bottom: 16px; }
+.gap-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.muted { color: var(--ink3); }
+.strong { font-weight: 700; }
+.code-inline {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-size: 13px;
+  color: var(--navy);
+}
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--line);
+  border-radius: var(--r-md);
+  margin-top: 10px;
+  font-size: 15px;
+  transition: .15s;
+}
+.input-field:focus { border-color: var(--cyan2); outline: none; box-shadow: 0 0 0 4px rgba(0,212,255,.08); }
+
+/* ─── Responsive ─── */
+@media (max-width: 750px) {
+  .badge-rack { display: none; }
+  .progress-wrap { display: none; }
+  .brand-sub { display: none; }
+  .module-counter { display: none; }
+}
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: relative; top: 0; height: auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; padding: 14px; }
+  .sidebar-section { grid-column: 1/-1; }
+  .content { padding: 20px; }
+  .intro-grid, .grid-hero { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2,1fr); }
+  .grid-3 { grid-template-columns: repeat(2,1fr); }
+  .kanban-board { grid-template-columns: repeat(2,1fr); }
+  .roadmap-track { grid-template-columns: repeat(2,1fr); }
+  .roadmap-track::before { display: none; }
+  .topbar { height: auto; flex-wrap: wrap; padding: 14px; gap: 10px; }
+}
+@media (max-width: 600px) {
+  .sidebar { grid-template-columns: repeat(2,1fr); }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .grid-stat { grid-template-columns: repeat(2,1fr); }
+  .choice-grid { grid-template-columns: 1fr; }
+  .kanban-board { grid-template-columns: 1fr; }
+}
+
+/* Global overflow safety */
+.card, .mini, .choice-card { max-width: 100%; }
+/* ── Prevent ALL grid/flex containers from clipping ── */
+.grid-2, .grid-3, .grid-4, .grid-hero, .grid-stat,
+.kanban-board, .roadmap-track, .phase-bank,
+.tool-card-grid, .choice-grid, .tag-row, .btn-row,
+.intro-modules, .drag-bank {
+  min-width: 0;
+}
+.grid-stat { overflow-x: auto; }
+.kanban-board { overflow-x: auto; min-width: 0; }
+/* All text containers */
+p, h1, h2, h3, h4, h5, li, span, td, th, label {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+/* All cards never overflow parent */
+.card, .mini, .tool-card, .choice-card,
+.kanban-task, .timeline-content, .speech-bubble,
+.drag-item, .phase-card {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ TOP BAR ═══ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">🚀</div>
+    <span class="brand-name">AI-Powered Project Manager</span>
+    <span class="brand-sub">| Mission Lab · TechStart AG</span>
+  </div>
+  <div class="topmeta">
+    <div class="badge-rack" id="badgeRack">
+      <div class="badge-icon" id="b0" title="Kickoff Badge">🎯</div>
+      <div class="badge-icon" id="b1" title="Stakeholder Expert">👥</div>
+      <div class="badge-icon" id="b2" title="Prompt Master">💬</div>
+      <div class="badge-icon" id="b3" title="Planner">🗺️</div>
+      <div class="badge-icon" id="b4" title="Risk Manager">⚠️</div>
+      <div class="badge-icon" id="b5" title="Kommunikator">📡</div>
+      <div class="badge-icon" id="b6" title="Crisis Manager">🔥</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+    <div class="xp-badge" id="xpBadge">0 XP</div>
+    <div class="module-counter" id="modCounter">01 / 14</div>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar" id="nav"></aside>
+<main class="content" id="mainContent">
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 0 – MISSION BRIEFING / INTRO
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen active" id="s0">
+  <div class="card card-mission">
+    <div class="eyebrow">Willkommen · Mission Briefing</div>
+    <h1 class="page-title">Du wirst zum<br>AI-Powered Project Manager.</h1>
+    <p class="lead">Eine neue Mission wartet. TechStart AG baut ihre wichtigste Kunden-App – und du leitest das Projekt. 12 Wochen. 8 Personen. CHF 120k. Jetzt beginnt die Arbeit.</p>
+    <div class="intro-modules">
+      <div class="intro-module"><div class="intro-module-icon">🎯</div><div class="intro-module-name">Stakeholder<br>Management</div></div>
+      <div class="intro-module"><div class="intro-module-icon">🗺️</div><div class="intro-module-name">Scope &<br>Planung</div></div>
+      <div class="intro-module"><div class="intro-module-icon">⚠️</div><div class="intro-module-name">Risiko &<br>Kontrolle</div></div>
+      <div class="intro-module"><div class="intro-module-icon">💬</div><div class="intro-module-name">KI-Prompting<br>& Tools</div></div>
+      <div class="intro-module"><div class="intro-module-icon">📡</div><div class="intro-module-name">Kommunikation<br>& Change</div></div>
+      <div class="intro-module"><div class="intro-module-icon">🏁</div><div class="intro-module-name">Abschluss &<br>Zertifikat</div></div>
+    </div>
+    <div class="tag-row">
+      <span class="tag tag-cyan">Szenariobasiert</span>
+      <span class="tag tag-mint">14 Module</span>
+      <span class="tag tag-amber">120+ XP möglich</span>
+      <span class="tag tag-purple">Zertifikat</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(0,'Kickoff Badge 🎯',0);goTo(1)">Mission starten →</button>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h2 class="section-title">🎓 Lernziele</h2>
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div>Du beherrschst den Projektlebenszyklus von Initiierung bis Abschluss.</li>
+        <li><div class="check-icon">✓</div>Du kannst KI gezielt für PM-Aufgaben einsetzen (Prompting, Tools).</li>
+        <li><div class="check-icon">✓</div>Du managt Stakeholder, Scope, Risiken und Kommunikation.</li>
+        <li><div class="check-icon">✓</div>Du triffst informierte Entscheidungen unter Unsicherheit.</li>
+        <li><div class="check-icon">✓</div>Du kennst PM-spezifische KI-Tools und ihre Grenzen.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2 class="section-title">🧭 So funktioniert jedes Modul</h2>
+      <div class="grid-2 mt-16">
+        <div class="mini"><h4>1 · Theorie</h4><p>Kompaktes PM-Fachwissen mit visuellem Fokus</p></div>
+        <div class="mini"><h4>2 · TechStart Case</h4><p>Theorie wird auf dein echtes Projekt angewendet</p></div>
+        <div class="mini"><h4>3 · KI-Unterstützung</h4><p>Welche KI-Tools und Prompts helfen hier?</p></div>
+        <div class="mini"><h4>4 · Interaktion</h4><p>Entscheidungen, Drag & Drop, Simulationen</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 1 – PROJEKTLEBENSZYKLUS & FALLAKTE
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s1">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 1 · Projektbriefing</div>
+    <h1 class="page-title">Dein erster Tag als Projektleiter.</h1>
+    <p class="lead">Es ist Montag, 08:00 Uhr. Auf deinem Tisch liegt das Briefing für den TechStart App-Launch. Du hast 12 Wochen. Was machst du als Erstes?</p>
+    <div class="grid-stat">
+      <div class="stat"><span class="stat-value">12</span><span class="stat-label">Wochen Laufzeit</span></div>
+      <div class="stat"><span class="stat-value">8</span><span class="stat-label">Teammitglieder</span></div>
+      <div class="stat"><span class="stat-value">120k</span><span class="stat-label">Budget CHF</span></div>
+      <div class="stat"><span class="stat-value">4</span><span class="stat-label">Stakeholder</span></div>
+    </div>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Projektlebenszyklus</div>
+    <h2 class="section-title">📐 Die fünf Projektphasen</h2>
+    <p class="text">Projekte durchlaufen unabhängig von ihrer Methode (klassisch oder agil) typische Phasen. Diese Struktur hilft dir, immer zu wissen, <strong>wo du stehst</strong> und <strong>was als Nächstes kommt</strong>.</p>
+    <div style="padding: 8px 0 24px; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+  <div style="display:flex; align-items:flex-start; min-width:560px; position:relative; padding: 10px 16px 0;">
+    <!-- connector line -->
+    <div style="position:absolute; top:31px; left:52px; right:52px; height:4px; background:linear-gradient(90deg,#00D4FF,#8B5CF6); border-radius:2px; opacity:.3; z-index:0;"></div>
+    <!-- Phase 1 -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; min-width:80px;">
+      <div style="width:44px;height:44px;border-radius:50%;background:#00D4FF;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#0D1B2A;flex-shrink:0;box-shadow:0 4px 12px rgba(0,212,255,.3);">1</div>
+      <div style="margin-top:10px;font-weight:700;font-size:13px;color:#3D5166;text-align:center;line-height:1.3;">Initiierung</div>
+      <div style="font-size:11px;color:#6B8299;text-align:center;margin-top:3px;line-height:1.4;">Charter, Scope</div>
+    </div>
+    <!-- Phase 2 -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; min-width:80px;">
+      <div style="width:44px;height:44px;border-radius:50%;background:#4BACF5;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(75,172,245,.3);">2</div>
+      <div style="margin-top:10px;font-weight:700;font-size:13px;color:#3D5166;text-align:center;line-height:1.3;">Planung</div>
+      <div style="font-size:11px;color:#6B8299;text-align:center;margin-top:3px;line-height:1.4;">PSP, Zeitplan,<br>Risiken</div>
+    </div>
+    <!-- Phase 3 -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; min-width:80px;">
+      <div style="width:44px;height:44px;border-radius:50%;background:#7B6CF8;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(123,108,248,.3);">3</div>
+      <div style="margin-top:10px;font-weight:700;font-size:13px;color:#3D5166;text-align:center;line-height:1.3;">Umsetzung</div>
+      <div style="font-size:11px;color:#6B8299;text-align:center;margin-top:3px;line-height:1.4;">Sprints,<br>Entwicklung</div>
+    </div>
+    <!-- Phase 4 -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; min-width:80px;">
+      <div style="width:44px;height:44px;border-radius:50%;background:#9B5CF6;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(155,92,246,.3);">4</div>
+      <div style="margin-top:10px;font-weight:700;font-size:13px;color:#3D5166;text-align:center;line-height:1.3;">Monitoring</div>
+      <div style="font-size:11px;color:#6B8299;text-align:center;margin-top:3px;line-height:1.4;">Kontrolle,<br>Reporting</div>
+    </div>
+    <!-- Phase 5 -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; min-width:80px;">
+      <div style="width:44px;height:44px;border-radius:50%;background:#FFB020;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(255,176,32,.3);">5</div>
+      <div style="margin-top:10px;font-weight:700;font-size:13px;color:#3D5166;text-align:center;line-height:1.3;">Abschluss</div>
+      <div style="font-size:11px;color:#6B8299;text-align:center;margin-top:3px;line-height:1.4;">Go-Live,<br>Lessons Learned</div>
+    </div>
+  </div>
+</div><div class="card card-info mt-16">
+      <strong>Du startest heute in Phase 1: Initiierung.</strong> Ziel ist es, Klarheit über Scope, Stakeholder und Erwartungen zu schaffen – bevor du irgendetwas planst.
+    </div>
+  </div>
+
+  <div class="card card-case">
+    <div class="eyebrow">Case · TechStart Briefing</div>
+    <h2 class="section-title">📋 Das Briefing liegt auf deinem Tisch</h2>
+    <div class="grid-2 mt-16">
+      <div>
+        <p class="text"><strong>Projektname:</strong> TechStart Kunden-App v1.0<br>
+        <strong>Ziel:</strong> App-Launch in App Store und Google Play<br>
+        <strong>Hauptfunktionen:</strong> Login, Rechnungen, Push-Benachrichtigungen, Kundenprofil<br>
+        <strong>Besonderheit:</strong> Externe Schnittstelle zu Vendor Sam (Zahlungsintegration)</p>
+        <div class="card card-warning mt-16">
+          <strong>⚠️ Problem:</strong> Die Anforderungen sind nur grob beschrieben. Der Kunde erwartet „eine moderne App mit möglichst vielen Features". Das ist kein Projektauftrag – das ist ein Risiko.
+        </div>
+      </div>
+      <div>
+        <div class="mini" style="margin-bottom:10px"><h4>🎯 Deine Aufgabe in Phase 1</h4>
+          <ul style="list-style:none">
+            <li style="padding:4px 0; font-size:14px">→ Stakeholder identifizieren & analysieren</li>
+            <li style="padding:4px 0; font-size:14px">→ Projektziele schriftlich klären</li>
+            <li style="padding:4px 0; font-size:14px">→ Scope grob abgrenzen</li>
+            <li style="padding:4px 0; font-size:14px">→ Project Charter erstellen</li>
+          </ul>
+        </div>
+        <div class="mini"><h4>🤖 KI-Hilfe in Phase 1</h4>
+          <p>KI kann aus einem Projektbriefing automatisch Zieldefinitionen, erste Risikolisten und Stakeholder-Fragen generieren – als ersten Entwurf.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Erste Entscheidung</div>
+    <h2 class="section-title">🎮 Was ist dein erster Schritt?</h2>
+    <p class="text">Es ist 08:15 Uhr. Das Briefing liegt gelesen vor dir. Was machst du als Erstes?</p>
+    <div class="choice-grid mt-16">
+      <div class="choice-card" onclick="choose(this,false,'Ein Gantt-Chart jetzt ist zu früh. Ohne geklärte Anforderungen und Stakeholder-Erwartungen wird dein Zeitplan unrealistisch sein. Erst Klarheit schaffen, dann planen.','choiceFB1')">
+        <span class="choice-letter">A</span>
+        <b>Gantt-Chart erstellen</b>
+        <span>Sofort den Zeitplan bauen – du willst Struktur.</span>
+      </div>
+      <div class="choice-card" onclick="choose(this,true,'Richtig. Kick-off Meeting mit allen Stakeholdern ist der erste Schritt: Erwartungen abgleichen, Scope klären, Rollen definieren. Das schafft die Grundlage für alles Weitere.','choiceFB1')">
+        <span class="choice-letter">B</span>
+        <b>Kick-off Meeting planen</b>
+        <span>Stakeholder zusammenbringen, Erwartungen klären.</span>
+      </div>
+      <div class="choice-card" onclick="choose(this,false,'Budget ist wichtig, aber nicht der erste Fokus. Ohne geklärten Scope kann Budget gar nicht sinnvoll eingeschätzt werden. Erst Scope, dann Budget.','choiceFB1')">
+        <span class="choice-letter">C</span>
+        <b>Budget aufteilen</b>
+        <span>Alle Posten sofort budgetieren.</span>
+      </div>
+    </div>
+    <div class="feedback-box" id="choiceFB1"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(1,'Kickoff Badge 🎯',0);goTo(2)">Weiter zu Stakeholder Management →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 2 – STAKEHOLDER MANAGEMENT
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s2">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 2 · Stakeholder Management</div>
+    <h1 class="page-title">Wer hat Macht?<br>Wer will was?</h1>
+    <p class="lead">Dein Kick-off Meeting ist in 2 Stunden. Zeit, die Stakeholder zu analysieren. Nicht alle haben die gleiche Macht und das gleiche Interesse – und genau das bestimmt deine Kommunikationsstrategie.</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Stakeholder Management</div>
+    <h2 class="section-title">📊 Stakeholder-Matrix: Macht vs. Interesse</h2>
+    <p class="text">Das wichtigste Tool im Stakeholder Management ist die <strong>Macht-Interesse-Matrix</strong>. Sie hilft dir, die richtige Strategie für jeden Stakeholder zu wählen:</p>
+    <div class="grid-2 mt-16">
+      <div>
+        <!-- Visual Stakeholder Matrix -->
+        <div style="background:var(--bg);border-radius:var(--r-lg);padding:20px;border:1px solid var(--line)">
+          <div style="display:grid;grid-template-columns:32px 1fr 1fr;gap:4px">
+            <!-- Header -->
+            <div></div>
+            <div style="text-align:center;font-size:12px;font-weight:700;color:var(--ink3);padding-bottom:6px;font-family:var(--font-display)">TIEFES INTERESSE</div>
+            <div style="text-align:center;font-size:12px;font-weight:700;color:var(--ink3);padding-bottom:6px;font-family:var(--font-display)">HOHES INTERESSE</div>
+            <!-- Row 1: Hohe Macht -->
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;font-weight:700;color:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display)">HOHE MACHT</div>
+            <div class="stake-quadrant q-satisfy" onclick="showStakeQuad('satisfy')">
+              <div class="q-label" style="color:#005F99">🤝 ZUFRIEDENSTELLEN</div>
+              <p style="font-size:12px;color:var(--ink2)">Regelmässig informieren, aber nicht überlasten</p>
+            </div>
+            <div class="stake-quadrant q-manage" onclick="showStakeQuad('manage')">
+              <div class="q-label" style="color:#C0001A">🎯 INTENSIV MANAGEN</div>
+              <p style="font-size:12px;color:var(--ink2)">Eng einbinden, Entscheidungen abstimmen</p>
+            </div>
+            <!-- Row 2: Niedrige Macht -->
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;font-weight:700;color:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display)">NIEDRIGE MACHT</div>
+            <div class="stake-quadrant q-monitor" onclick="showStakeQuad('monitor')">
+              <div class="q-label" style="color:#7A4A00">👁 BEOBACHTEN</div>
+              <p style="font-size:12px;color:var(--ink2)">Minimal informieren, Aufwand niedrig halten</p>
+            </div>
+            <div class="stake-quadrant q-inform" onclick="showStakeQuad('inform')">
+              <div class="q-label" style="color:#007F60">📣 INFORMIEREN</div>
+              <p style="font-size:12px;color:var(--ink2)">Regelmässige Updates, keine tiefen Einbindungen nötig</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div id="stakeQuadDetail" class="card card-info" style="min-height:160px">
+          <p class="text muted">Klicke auf ein Quadrant um mehr zu erfahren.</p>
+        </div>
+        <div class="card card-warning mt-16">
+          <strong>PM-Praxis:</strong> Stakeholder-Analyse ist kein einmaliger Schritt. Macht und Interesse können sich im Projektverlauf verschieben – z.B. wenn neue Entscheider dazukommen oder ein Feature strategisch wichtiger wird.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-case">
+    <div class="eyebrow">Case · TechStart Stakeholder</div>
+    <h2 class="section-title">👥 Deine vier Stakeholder</h2>
+    <p class="text">Klicke auf eine Person, um ihre Erwartungen und Herausforderungen zu lesen.</p>
+    <div class="grid-4 mt-16">
+      <div class="stake-chip" onclick="showStakeholder('lea',this)">
+        <div class="avatar avatar-lea">👩‍💼</div>
+        <div><div class="speaker-name">Lea</div><div class="speaker-role">Sponsorin</div></div>
+      </div>
+      <div class="stake-chip" onclick="showStakeholder('marco',this)">
+        <div class="avatar avatar-marco">🙋‍♂️</div>
+        <div><div class="speaker-name">Marco</div><div class="speaker-role">Product Owner</div></div>
+      </div>
+      <div class="stake-chip" onclick="showStakeholder('nina',this)">
+        <div class="avatar avatar-nina">👩‍💻</div>
+        <div><div class="speaker-name">Nina</div><div class="speaker-role">Lead Dev</div></div>
+      </div>
+      <div class="stake-chip" onclick="showStakeholder('sam',this)">
+        <div class="avatar avatar-sam">🤝</div>
+        <div><div class="speaker-name">Sam</div><div class="speaker-role">Vendor</div></div>
+      </div>
+    </div>
+    <div id="stakeDetail" class="speech-bubble mt-16">
+      <div class="speech-meta">
+        <div id="stakAvatar" class="avatar avatar-lea">👩‍💼</div>
+        <div><div id="stakName" class="speaker-name">Lea Müller</div><div id="stakRole" class="speaker-role">Sponsorin & CFO</div></div>
+      </div>
+      <p id="stakQuote" style="font-size:15px">"Ich brauche in drei Monaten ein sichtbares Ergebnis. Wir müssen der Geschäftsleitung zeigen, dass dieses Projekt liefert."</p>
+      <div id="stakInfo" class="mt-16" style="font-size:13px;color:var(--ink2)">
+        <strong>Macht/Interesse:</strong> Hoch/Mittel · <strong>Strategie:</strong> Intensiv managen, wöchentliche Statusupdates<br>
+        <strong>KI-Hilfe:</strong> KI kann prägnante Executive Summaries aus deinem Projekt-Status erstellen.
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Stakeholder-Priorisierung</div>
+    <h2 class="section-title">🧩 Ordne Stakeholder der Matrix zu</h2>
+    <p class="text">Ziehe die Stakeholder-Chips in das richtige Quadrant der Matrix. Beachte ihre Rolle, Macht und ihr Interesse am Projekt.</p>
+    <div class="drag-bank" id="stakeBank">
+      <div class="drag-item" draggable="true" data-stake="lea" id="sdLea">👩‍💼 Lea (Sponsorin)</div>
+      <div class="drag-item" draggable="true" data-stake="marco" id="sdMarco">🙋‍♂️ Marco (Product Owner)</div>
+      <div class="drag-item" draggable="true" data-stake="nina" id="sdNina">👩‍💻 Nina (Lead Dev)</div>
+      <div class="drag-item" draggable="true" data-stake="sam" id="sdSam">🤝 Sam (Vendor)</div>
+    </div>
+    <div class="grid-2">
+      <div class="drop-zone" id="dz-manage" data-correct='["marco"]'>
+        <h5 style="color:#C0001A">🎯 Intensiv Managen<br>(Hohe Macht, Hohes Interesse)</h5>
+      </div>
+      <div class="drop-zone" id="dz-satisfy" data-correct='["lea"]'>
+        <h5 style="color:#005F99">🤝 Zufriedenstellen<br>(Hohe Macht, Tiefes Interesse)</h5>
+      </div>
+      <div class="drop-zone" id="dz-inform" data-correct='["nina"]'>
+        <h5 style="color:#007F60">📣 Informieren<br>(Niedrige Macht, Hohes Interesse)</h5>
+      </div>
+      <div class="drop-zone" id="dz-monitor" data-correct='["sam"]'>
+        <h5 style="color:#A06000">👁 Beobachten<br>(Niedrige Macht, Tiefes Interesse)</h5>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="checkStakeMatrix()">Analyse prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetStakeMatrix()">Zurücksetzen</button>
+    </div>
+    <div class="feedback-box" id="stakeMatFB"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(2,'Stakeholder Expert 👥',1);goTo(3)">Weiter zu KI-Basics →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 3 – KI-BASICS
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s3">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 3 · KI im Projektmanagement</div>
+    <h1 class="page-title">KI ist dein Assistent –<br>nicht dein Ersatz.</h1>
+    <p class="lead">Nach dem Kick-off hat dir das Team eine Frage gestellt: „Können wir ChatGPT für alles nutzen?" Zeit für eine ehrliche Antwort.</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · KI-Kompetenz</div>
+    <h2 class="section-title">🤖 Was KI kann – und was nicht</h2>
+    <div class="grid-2 mt-16">
+      <div class="card" style="border-color:rgba(0,200,150,.3);background:var(--mint-bg)">
+        <h4 style="color:#007F60;font-family:var(--font-display);margin-bottom:12px">✅ KI ist stark bei…</h4>
+        <ul class="checklist">
+          <li><div class="check-icon">✓</div>Erste Entwürfe & Strukturierung (Pläne, Berichte, User Stories)</li>
+          <li><div class="check-icon">✓</div>Brainstorming (Risiken, Fragen, Ideen generieren)</li>
+          <li><div class="check-icon">✓</div>Texte zusammenfassen (Meeting-Protokolle, Briefings)</li>
+          <li><div class="check-icon">✓</div>Standard-Kommunikation formulieren (Status-Mails, Updates)</li>
+          <li><div class="check-icon">✓</div>Anforderungen strukturieren (aus vagen Aussagen klare Items machen)</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(255,71,87,.25);background:var(--coral-bg)">
+        <h4 style="color:#C0001A;font-family:var(--font-display);margin-bottom:12px">🚫 KI ist schwach bei…</h4>
+        <ul class="checklist">
+          <li><div class="check-icon cross-icon">✗</div>Projektverantwortung tragen</li>
+          <li><div class="check-icon cross-icon">✗</div>Politische Stakeholder-Dynamiken beurteilen</li>
+          <li><div class="check-icon cross-icon">✗</div>Fakten ohne Prüfung garantieren (Halluzination!)</li>
+          <li><div class="check-icon cross-icon">✗</div>Vertrauliche Daten in Public Tools verarbeiten</li>
+          <li><div class="check-icon cross-icon">✗</div>Kreative Entscheidungen mit Kontextverständnis</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card card-danger mt-16">
+      <strong>⚠️ KI halluziniert:</strong> Sprachmodelle erzeugen grammatikalisch korrekte, aber faktisch falsche Informationen. Im PM bedeutet das: <em>Jeder KI-Output muss geprüft und an den Projektkontext angepasst werden.</em>
+    </div>
+  </div>
+
+  <div class="card card-case">
+    <div class="eyebrow">Case · TechStart KI-Einsatz</div>
+    <h2 class="section-title">💡 Sinnvoller KI-Einsatz im TechStart-Projekt</h2>
+    <div class="grid-3 mt-16">
+      <div class="mini">
+        <h4>📄 Kick-off Protokoll</h4>
+        <p>Du diktierst die Key Takeaways. KI strukturiert daraus ein Meeting-Protokoll mit Entscheidungen, Aufgaben und Owner.</p>
+        <div class="tag-row"><span class="tag tag-mint">Sinnvoll</span><span class="tag tag-cyan">Zeitersparnis</span></div>
+      </div>
+      <div class="mini">
+        <h4>⚠️ Risiko-Brainstorming</h4>
+        <p>„Welche Risiken sind bei einem 12-Wochen-App-Launch mit externen Vendors typisch?" – KI liefert schnell 15 Startpunkte.</p>
+        <div class="tag-row"><span class="tag tag-mint">Sinnvoll</span><span class="tag tag-amber">Prüfen nötig</span></div>
+      </div>
+      <div class="mini">
+        <h4>📊 Statusbericht an Lea</h4>
+        <p>Aus deinen Bullet Points erstellt KI einen Executive Summary, den Lea in 60 Sekunden lesen kann.</p>
+        <div class="tag-row"><span class="tag tag-mint">Sinnvoll</span><span class="tag tag-cyan">Zeitersparnis</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · KI-Einsatz beurteilen</div>
+    <h2 class="section-title">🎮 Sinnvoll oder nicht?</h2>
+    <p class="text">Dein Team schlägt verschiedene KI-Einsätze vor. Bewertest du jeden Vorschlag.</p>
+    <div id="aiUseCases"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(3,'',2);goTo(4)">Weiter zu Prompting →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 4 – PROMPTING
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s4">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 4 · KI-Prompting</div>
+    <h1 class="page-title">Gute Prompts sind<br>Projektaufträge an die KI.</h1>
+    <p class="lead">Woche 1, Tag 3. Du willst die KI für erste Projektdokumente nutzen. Lea wartet auf eine erste Risikoliste bis morgen früh. Dein Prompt entscheidet, ob die KI liefert.</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Prompt Engineering</div>
+    <h2 class="section-title">🧩 Die RAUF-Formel</h2>
+    <p class="text">Ein guter PM-Prompt funktioniert wie ein guter Arbeitsauftrag. Je klarer die vier Elemente, desto besser das Ergebnis:</p>
+    <div class="grid-4 mt-16">
+      <div class="mini" style="border-top:3px solid var(--cyan);text-align:center;padding-top:20px">
+        <div style="font-size:32px;margin-bottom:8px">🎭</div>
+        <h4>R – Rolle</h4>
+        <p>"Du bist ein erfahrener IT-PM mit Agile-Erfahrung..."</p>
+      </div>
+      <div class="mini" style="border-top:3px solid var(--purple);text-align:center;padding-top:20px">
+        <div style="font-size:32px;margin-bottom:8px">🌍</div>
+        <h4>A – Aufgabe</h4>
+        <p>Was genau soll erstellt werden? "Erstelle eine Risikoliste..."</p>
+      </div>
+      <div class="mini" style="border-top:3px solid var(--mint);text-align:center;padding-top:20px">
+        <div style="font-size:32px;margin-bottom:8px">📌</div>
+        <h4>U – Umfeld</h4>
+        <p>Kontext: "12 Wochen, 8 Personen, externer Vendor, CHF 120k..."</p>
+      </div>
+      <div class="mini" style="border-top:3px solid var(--amber);text-align:center;padding-top:20px">
+        <div style="font-size:32px;margin-bottom:8px">📄</div>
+        <h4>F – Format</h4>
+        <p>"Als Tabelle mit Risiko, Wahrscheinlichkeit, Massnahme."</p>
+      </div>
+    </div>
+    <div class="prompt-terminal mt-16">
+      <span class="prompt-key">Rolle:</span> <span class="prompt-val">Du bist ein erfahrener IT-Projektmanager.</span><br>
+      <span class="prompt-key">Aufgabe:</span> <span class="prompt-val">Erstelle die Top-10-Risiken für einen App-Launch.</span><br>
+      <span class="prompt-key">Umfeld:</span> <span class="prompt-val">12 Wochen, 8 Personen, CHF 120k, externer Vendor für Zahlungsintegration, Deadline fix.</span><br>
+      <span class="prompt-key">Format:</span> <span class="prompt-val">Tabelle: Risiko | Wahrscheinlichkeit (H/M/T) | Auswirkung | Massnahme</span>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Prompt Coach</div>
+    <h2 class="section-title">🧪 Schreibe deinen Prompt</h2>
+    <p class="text">Lea braucht bis morgen eine erste Stakeholder-Analyse. Formuliere einen Prompt mit allen vier RAUF-Elementen. Der Coach gibt dir Feedback.</p>
+    <textarea class="prompt-input" id="promptInput" placeholder="Schreibe hier deinen Prompt für die KI..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="checkPrompt()">Prompt analysieren</button>
+      <button class="btn btn-secondary btn-sm" onclick="loadPromptTemplate()">Mustervorlage laden</button>
+    </div>
+    <div class="feedback-box" id="promptFB"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(4,'Prompt Master 💬',2);goTo(5)">Weiter zu PM-KI-Tools →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 5 – PM KI TOOLS
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s5">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 5 · PM-KI-Tool-Kompass</div>
+    <h1 class="page-title">Nicht nur ChatGPT –<br>KI steckt überall drin.</h1>
+    <p class="lead">Woche 2. Das Team fragt: "Welches Tool sollen wir für das Projekt nutzen?" Du weisst jetzt: ChatGPT ist ein Denkpartner. Aber echte PM-Arbeit braucht PM-Tools mit eingebauter KI.</p>
+  </div>
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · KI-Tool-Typen</div>
+    <h2 class="section-title">🗺️ Zwei Welten, ein Ziel</h2>
+    <div class="grid-2 mt-16">
+      <div class="mini" style="border-left:4px solid var(--cyan)">
+        <h4>💬 Generative KI (Chatbots)</h4>
+        <p>Erzeugt Texte, Strukturen, Entwürfe auf Basis von Prompts. Kontextlos, ohne Projektdaten.</p>
+        <div class="tag-row"><span class="tag tag-cyan">ChatGPT</span><span class="tag tag-cyan">Claude</span><span class="tag tag-cyan">Gemini</span></div>
+      </div>
+      <div class="mini" style="border-left:4px solid var(--purple)">
+        <h4>📊 Integrierte PM-KI</h4>
+        <p>Arbeitet mit echten Projektdaten: Tasks, Deadlines, Ressourcen. Kontextbewusst und vernetzt.</p>
+        <div class="tag-row"><span class="tag tag-purple">Jira AI</span><span class="tag tag-purple">Copilot</span><span class="tag tag-purple">Asana AI</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Tool-Karten · PM-spezifische KI</div>
+    <h2 class="section-title">🃏 Klicke auf ein Tool für Details</h2>
+    <p class="text mb-16">Jedes Tool hat seinen Platz. Klicke auf eine Karte, um Einsatzgebiet, Stärken, Grenzen und TechStart-Beispiel zu sehen.</p>
+    <div class="tool-card-grid" id="toolGrid"></div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Tool-Stack Builder</div>
+    <h2 class="section-title">🧩 Baue den TechStart Tool-Stack</h2>
+    <p class="text">Wähle bis zu drei Tools für euer Projekt. Nicht jedes Tool passt zu jedem Kontext.</p>
+    <div class="choice-grid" id="stackCards">
+      <div class="choice-card" data-stack="chatgpt" onclick="toggleTool(this)"><b>💬 ChatGPT / Claude</b><span>Prompts, Entwürfe, Brainstorming</span></div>
+      <div class="choice-card" data-stack="jira" onclick="toggleTool(this)"><b>🔵 Jira + AI</b><span>Sprints, Backlog, Bugs, Technik</span></div>
+      <div class="choice-card" data-stack="copilot" onclick="toggleTool(this)"><b>🪟 Microsoft Copilot</b><span>Meetings, Planner, Office-Integration</span></div>
+      <div class="choice-card" data-stack="asana" onclick="toggleTool(this)"><b>🌿 Asana AI</b><span>Workflows, Team-Koordination</span></div>
+      <div class="choice-card" data-stack="smartsheet" onclick="toggleTool(this)"><b>📊 Smartsheet AI</b><span>Portfolio, Reporting, Ressourcen</span></div>
+      <div class="choice-card" data-stack="none" onclick="toggleTool(this)"><b>❌ Kein PM-Tool</b><span>Alles per Mail und Excel</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="evalStack()">Stack bewerten</button>
+    </div>
+    <div class="feedback-box" id="stackFB"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(5,'',2);goTo(6)">Weiter zu Requirements →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 6 – REQUIREMENTS ENGINEERING
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s6">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 6 · Requirements Engineering</div>
+    <h1 class="page-title">📨 Krisenemail von Marco.</h1>
+    <p class="lead" style="color:#FFD8A0">Woche 2, Freitagnachmittag. Du liest: "Die App soll modern sein, intuitiv, möglichst viele Features und natürlich sicher. Wann können wir starten?" — Das ist kein Anforderungsdokument. Das ist ein Risiko.</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Requirements Engineering</div>
+    <h2 class="section-title">⚙️ Funktional vs. Nicht-funktional</h2>
+    <p class="text">Anforderungen (Requirements) beschreiben, was ein Produkt tun soll und wie gut. Die Unterscheidung ist für Planung, Testing und Abnahme entscheidend:</p>
+    <div class="grid-2 mt-16">
+      <div class="card" style="border-top:3px solid var(--cyan)">
+        <h4 style="font-family:var(--font-display);margin-bottom:12px">⚙️ Funktionale Anforderungen</h4>
+        <p class="text"><strong>Was soll das System tun?</strong></p>
+        <ul class="checklist" style="margin-top:10px">
+          <li><div class="check-icon">✓</div>Nutzer können sich mit E-Mail einloggen</li>
+          <li><div class="check-icon">✓</div>Rechnungen als PDF herunterladen</li>
+          <li><div class="check-icon">✓</div>Push-Benachrichtigungen aktivieren</li>
+        </ul>
+        <div class="tag-row mt-16"><span class="tag tag-cyan">Testbar</span><span class="tag tag-cyan">Konkret</span></div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--purple)">
+        <h4 style="font-family:var(--font-display);margin-bottom:12px">✨ Nicht-funktionale Anforderungen</h4>
+        <p class="text"><strong>Wie gut soll es das tun?</strong></p>
+        <ul class="checklist" style="margin-top:10px">
+          <li><div class="check-icon">✓</div>App lädt Startseite in &lt;2 Sek.</li>
+          <li><div class="check-icon">✓</div>DSGVO-konform, ISO 27001</li>
+          <li><div class="check-icon">✓</div>Barrierefreiheit WCAG 2.1 AA</li>
+        </ul>
+        <div class="tag-row mt-16"><span class="tag tag-purple">Messbar</span><span class="tag tag-purple">Qualität</span></div>
+      </div>
+    </div>
+    <div class="card card-info mt-16">
+      <strong>🤖 KI-Hilfe:</strong> KI kann aus vagen Kundenaussagen strukturierte Anforderungen ableiten – aber du musst sie mit Marco verifizieren! Beispiel-Prompt: "Leite aus dieser Aussage 5 testbare funktionale und 3 nicht-funktionale Anforderungen ab."
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Anforderungs-Klassifikation</div>
+    <h2 class="section-title">🧲 Sortiere Marcos Anforderungen</h2>
+    <p class="text">Marco hat dir eine Liste geschickt. Ziehe jede Anforderung in die richtige Kategorie.</p>
+    <div class="drag-bank" id="reqBank">
+      <div class="drag-item" draggable="true" data-type="functional">📱 Nutzer können Rechnungen herunterladen</div>
+      <div class="drag-item" draggable="true" data-type="nonfunctional">⚡ App-Start in unter 2 Sekunden</div>
+      <div class="drag-item" draggable="true" data-type="functional">🔔 Push-Benachrichtigungen aktivieren</div>
+      <div class="drag-item" draggable="true" data-type="nonfunctional">🔒 DSGVO-konformer Datenspeicher</div>
+      <div class="drag-item" draggable="true" data-type="functional">👤 Nutzer können Profil bearbeiten</div>
+      <div class="drag-item" draggable="true" data-type="nonfunctional">🌍 App in DE/FR/IT verfügbar</div>
+    </div>
+    <div class="grid-2 mt-16">
+      <div class="drop-zone" id="dz-functional" data-accept="functional">
+        <h5>⚙️ Funktionale Anforderungen</h5>
+      </div>
+      <div class="drop-zone" id="dz-nonfunctional" data-accept="nonfunctional">
+        <h5>✨ Nicht-funktionale Anforderungen</h5>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="checkReqs()">Klassifikation prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetReqs()">Zurücksetzen</button>
+    </div>
+    <div class="feedback-box" id="reqFB"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(6,'',3);goTo(7)">Weiter zu Projektplanung →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 7 – PROJEKTPLANUNG & ROADMAP
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s7">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 7 · Projektplanung</div>
+    <h1 class="page-title">Woche 2: Du baust<br>den Projektplan.</h1>
+    <p class="lead">Die Requirements sind geklärt. Jetzt kommt der Plan. Lea hat dir 30 Minuten Zeit gegeben, um eine erste Roadmap zu präsentieren. Was zeigst du ihr?</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Projektplanung</div>
+    <h2 class="section-title">🗺️ Drei Planungsebenen</h2>
+    <div class="grid-3 mt-16">
+      <div class="mini" style="border-top:3px solid var(--cyan)">
+        <h4>📦 Projektstrukturplan (PSP)</h4>
+        <p>Zerlegt das Gesamtprojekt in Arbeitspakete. Schafft Klarheit über Scope und Verantwortlichkeiten.</p>
+        <div class="tag-row"><span class="tag tag-cyan">Scope-Basis</span></div>
+      </div>
+      <div class="mini" style="border-top:3px solid var(--purple)">
+        <h4>🚩 Meilensteinplan</h4>
+        <p>Definiert wichtige Zwischenziele und Entscheidungspunkte. Basis für Stakeholder-Kommunikation.</p>
+        <div class="tag-row"><span class="tag tag-purple">Transparenz</span></div>
+      </div>
+      <div class="mini" style="border-top:3px solid var(--amber)">
+        <h4>🔗 Abhängigkeiten</h4>
+        <p>Zeigt, welche Aufgaben von anderen abhängen. Kritischer Pfad bestimmt die Mindestlaufzeit.</p>
+        <div class="tag-row"><span class="tag tag-amber">Kritisch</span></div>
+      </div>
+    </div>
+    <div class="card card-info mt-16">
+      <strong>🤖 KI-Nutzen:</strong> KI kann aus deinen Anforderungen schnell einen ersten PSP-Entwurf generieren. Du prüfst dann Vollständigkeit, Aufwände und Abhängigkeiten – das bleibt deine Aufgabe.
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Roadmap Builder</div>
+    <h2 class="section-title">🛣️ Baue die TechStart-Roadmap</h2>
+    <p class="text">Ziehe die vier Projektphasen in die richtige Reihenfolge auf der Roadmap-Timeline.</p>
+    <div class="phase-bank" id="phaseBank">
+      <div class="phase-card" draggable="true" data-order="3"><b>🔨 Entwicklung & Testing</b><span>Sprints, QA, Bugfixing</span></div>
+      <div class="phase-card" draggable="true" data-order="1"><b>📋 Requirements & Scope</b><span>Interviews, User Stories, Priorisierung</span></div>
+      <div class="phase-card" draggable="true" data-order="4"><b>🚀 Launch & Abschluss</b><span>Go-Live, Lessons Learned</span></div>
+      <div class="phase-card" draggable="true" data-order="2"><b>🏗️ Design & Setup</b><span>UX, Architektur, Ressourcenplan</span></div>
+    </div>
+    <div style="overflow-x:auto;"><div class="roadmap-track" id="roadmapLane">
+      <div class="road-slot" data-slot="1">
+        <div class="road-slot-num">1</div>
+        <div class="road-slot-label">Woche 1–2<br>Startphase</div>
+      </div>
+      <div class="road-slot" data-slot="2">
+        <div class="road-slot-num">2</div>
+        <div class="road-slot-label">Woche 3–4<br>Setup</div>
+      </div>
+      <div class="road-slot" data-slot="3">
+        <div class="road-slot-num">3</div>
+        <div class="road-slot-label">Woche 5–9<br>Umsetzung</div>
+      </div>
+      <div class="road-slot" data-slot="4">
+        <div class="road-slot-num">4</div>
+        <div class="road-slot-label">Woche 10–12<br>Abschluss</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="checkRoadmap()">Roadmap prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetRoadmap()">Zurücksetzen</button>
+    </div>
+    <div class="feedback-box" id="roadmapFB"></div>
+  </div>
+
+  <div class="card card-case">
+    <div class="eyebrow">Case · TechStart Beispiel-Timeline</div>
+    <h2 class="section-title">📅 Deine Roadmap für Lea</h2>
+    <div class="timeline-list">
+      <div class="timeline-item">
+        <div class="timeline-week">W1–2</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content"><b>Requirements & Scope</b><span>Stakeholder-Interviews, User Stories, Priorisierung, Kick-off</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-week">W3–4</div>
+        <div class="timeline-dot" style="background:var(--purple);box-shadow:0 0 0 3px rgba(139,92,246,.15)"></div>
+        <div class="timeline-content"><b>Design & Setup</b><span>UX-Wireframes, Architektur, Vendor-Onboarding, Backlog aufbauen</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-week">W5–9</div>
+        <div class="timeline-dot" style="background:var(--amber);box-shadow:0 0 0 3px rgba(255,176,32,.15)"></div>
+        <div class="timeline-content"><b>Entwicklung & Testing</b><span>3 Sprints, QA, User Acceptance Testing, Vendor-Integration</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-week">W10–12</div>
+        <div class="timeline-dot" style="background:var(--mint);box-shadow:0 0 0 3px rgba(0,200,150,.15)"></div>
+        <div class="timeline-content"><b>Launch & Abschluss</b><span>Store-Einreichung, Go-Live, Monitoring, Lessons Learned</span></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(7,'',3);goTo(8)">Weiter zu Ressourcenplanung →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 8 – RESSOURCENPLANUNG & KANBAN
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s8">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 8 · Ressourcenplanung</div>
+    <h1 class="page-title">Woche 3: Nina meldet sich.<br>"Wir sind zu 120% ausgelastet."</h1>
+    <p class="lead" style="color:#FFD8A0">Das Dev-Team hat zu viele Tasks für Sprint 1. Du musst priorisieren, Ressourcen einplanen und dem Team Klarheit geben. Das Kanban-Board zeigt dir das Problem.</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Ressourcenplanung</div>
+    <h2 class="section-title">👥 Ressourcenplanung im PM</h2>
+    <div class="grid-2 mt-16">
+      <div class="mini">
+        <h4>📊 Kapazitätsplanung</h4>
+        <p>Wie viele Stunden hat jede Person pro Sprint? Überplanung (>100%) führt zu Qualitätsverlust, Burnout und Verzug.</p>
+        <div class="tag-row"><span class="tag tag-cyan">Pro Person</span><span class="tag tag-amber">Max 80% verplanen</span></div>
+      </div>
+      <div class="mini">
+        <h4>🔗 Ressourcen-Engpass</h4>
+        <p>Wenn eine Schlüsselperson (z.B. Nina als Lead Dev) überlastet ist, blockiert das das gesamte Team. Das ist ein Projektrisiko.</p>
+        <div class="tag-row"><span class="tag tag-coral">Kritisch</span></div>
+      </div>
+      <div class="mini">
+        <h4>🤖 KI für Ressourcenplanung</h4>
+        <p>Tools wie Smartsheet AI oder Jira erkennen Überlastungsmuster automatisch und schlagen Umverteilungen vor.</p>
+      </div>
+      <div class="mini">
+        <h4>🏊 Resource Leveling</h4>
+        <p>Tasks werden verschoben oder geteilt, um Ressourcen-Peaks abzuflachen – ohne den kritischen Pfad zu verändern.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Kanban Board</div>
+    <h2 class="section-title">📋 Sprint 1 Kanban: Räume die Queue auf</h2>
+    <p class="text">Das Backlog ist überfüllt. Verschiebe Tasks zwischen den Spalten. Nicht alles kann in Sprint 1 – priorisiere klug.</p>
+    <div class="kanban-board" id="kanbanBoard">
+      <div class="kanban-col" id="col-backlog">
+        <div class="kanban-col-header">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--ink3)"></div>
+          <div class="kanban-col-title">Backlog</div>
+          <div class="kanban-count" id="cnt-backlog">0</div>
+        </div>
+      </div>
+      <div class="kanban-col" id="col-todo">
+        <div class="kanban-col-header">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--cyan)"></div>
+          <div class="kanban-col-title">Sprint 1</div>
+          <div class="kanban-count" id="cnt-todo">0</div>
+        </div>
+      </div>
+      <div class="kanban-col" id="col-doing">
+        <div class="kanban-col-header">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--amber)"></div>
+          <div class="kanban-col-title">In Progress</div>
+          <div class="kanban-count" id="cnt-doing">0</div>
+        </div>
+      </div>
+      <div class="kanban-col" id="col-done">
+        <div class="kanban-col-header">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--mint)"></div>
+          <div class="kanban-col-title">Done</div>
+          <div class="kanban-count" id="cnt-done">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="card card-info mt-16">
+      <strong>💡 PM-Praxis:</strong> Sprint 1 sollte maximal 70-80% der Team-Kapazität belegen. Puffer für unerwartete Tasks und Reviews einplanen. KI-Tools wie Jira AI erkennen Überlastungen automatisch.
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(8,'',3);goTo(9)">Weiter zu Risikomanagement →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 9 – RISIKOMANAGEMENT
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s9">
+  <div class="card card-mission" style="background:linear-gradient(135deg,#2A1020,#3A1525)">
+    <div class="eyebrow" style="color:#FF8090">🚨 Projektkrise</div>
+    <h1 class="page-title">Woche 4: Sam schreibt.<br>"Zwei Wochen Verzug."</h1>
+    <p class="lead" style="color:#FFB8C0">Vendor Sam meldet: Die Zahlungsschnittstelle kommt erst in Woche 7 statt Woche 5. Gleichzeitig will Marco drei neue Features. Der Go-Live ist in Gefahr. Wie handelst du?</p>
+    <div class="tag-row">
+      <span class="tag" style="background:rgba(255,71,87,.2);color:#FF8090;border-color:rgba(255,71,87,.3)">🔴 Hohes Risiko</span>
+      <span class="tag" style="background:rgba(255,176,32,.15);color:#FFB020;border-color:rgba(255,176,32,.2)">⏰ Zeitkritisch</span>
+    </div>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Risikomanagement</div>
+    <h2 class="section-title">⚠️ Risiken systematisch managen</h2>
+    <p class="text">Risikomanagement ist kein einmaliges Event. Es ist ein kontinuierlicher Prozess über die gesamte Projektlaufzeit:</p>
+    <div class="grid-4 mt-16">
+      <div class="mini" style="text-align:center;border-top:3px solid var(--coral)">
+        <div style="font-size:28px;margin-bottom:8px">🔍</div>
+        <h4>1. Identifizieren</h4>
+        <p style="font-size:13px">Was könnte schiefgehen? Brainstorming mit Team und KI</p>
+      </div>
+      <div class="mini" style="text-align:center;border-top:3px solid var(--amber)">
+        <div style="font-size:28px;margin-bottom:8px">📊</div>
+        <h4>2. Bewerten</h4>
+        <p style="font-size:13px">Wahrscheinlichkeit × Auswirkung = Risiko-Score</p>
+      </div>
+      <div class="mini" style="text-align:center;border-top:3px solid var(--cyan)">
+        <div style="font-size:28px;margin-bottom:8px">🛡️</div>
+        <h4>3. Massnahmen</h4>
+        <p style="font-size:13px">Vermeiden, Übertragen, Mindern oder Akzeptieren</p>
+      </div>
+      <div class="mini" style="text-align:center;border-top:3px solid var(--mint)">
+        <div style="font-size:28px;margin-bottom:8px">📡</div>
+        <h4>4. Überwachen</h4>
+        <p style="font-size:13px">Risiken regelmässig neu bewerten und kommunizieren</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Risikomatrix</div>
+    <h2 class="section-title">📐 Bewerte die TechStart-Risiken</h2>
+    <p class="text">Klicke auf die Felder der Matrix, um den Risiko-Score zu sehen. Dann ordne die Risiken zu.</p>
+    <div class="grid-2 mt-16">
+      <div>
+        <div class="risk-matrix-wrap">
+          <div class="risk-matrix" id="riskMatrix"></div>
+        </div>
+        <div class="card card-info mt-16" id="riskInfo" style="font-size:14px">
+          Klicke auf ein Feld, um den Score zu sehen.
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--font-display);font-size:15px;margin-bottom:12px">TechStart-Risiken einordnen:</h4>
+        <div id="riskCards">
+          <div class="drag-item" draggable="true" style="display:flex;margin-bottom:8px;width:100%" data-risk="vendor">🔌 Vendor-Verzögerung 2 Wochen</div>
+          <div class="drag-item" draggable="true" style="display:flex;margin-bottom:8px;width:100%" data-risk="scope">📦 Scope Creep durch Marco</div>
+          <div class="drag-item" draggable="true" style="display:flex;margin-bottom:8px;width:100%" data-risk="budget">💰 Budget-Überschreitung</div>
+          <div class="drag-item" draggable="true" style="display:flex;margin-bottom:8px;width:100%" data-risk="quality">🔴 Qualitätsprobleme beim Testing</div>
+        </div>
+        <div class="card card-danger mt-16" id="riskAdvice" style="display:none;font-size:13px;line-height:1.6">
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-case mt-16">
+      <div class="eyebrow">Entscheidungsmoment</div>
+      <h2 class="section-title">🎯 Vendor ist 2 Wochen verspätet. Was tust du?</h2>
+      <div class="choice-grid">
+        <div class="choice-card" onclick="choose(this,false,'Riskant. Ohne Kommunikation an Lea verlierst du Vertrauen und Zeit. Eine Verzögerung ohne Massnahmenplan ist schwer zu rechtfertigen.','riskDecFB')">
+          <span class="choice-letter">A</span>
+          <b>Abwarten und hoffen</b>
+          <span>Vielleicht holt Sam die Zeit noch auf.</span>
+        </div>
+        <div class="choice-card" onclick="choose(this,true,'Richtig. Transparenz schafft Vertrauen. Du informierst Lea sofort, präsentierst drei Optionen und bittest um eine Entscheidung. Das ist Projektführung.','riskDecFB')">
+          <span class="choice-letter">B</span>
+          <b>Lea sofort informieren + Optionen präsentieren</b>
+          <span>Problem kommunizieren, Lösungen mitliefern.</span>
+        </div>
+        <div class="choice-card" onclick="choose(this,false,'Zu riskant. Einen neuen Vendor in laufendem Projekt zu integrieren kostet mehr Zeit als die 2 Wochen Verzug. Und rechtliche Risiken kommen dazu.','riskDecFB')">
+          <span class="choice-letter">C</span>
+          <b>Vendor sofort ersetzen</b>
+          <span>Sam ist unzuverlässig – wir suchen jemand Neues.</span>
+        </div>
+      </div>
+      <div class="feedback-box" id="riskDecFB"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(9,'Risk Manager ⚠️',4);goTo(10)">Weiter zu Kommunikation →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 10 – KOMMUNIKATION
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s10">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 9 · Kommunikationsplanung</div>
+    <h1 class="page-title">Projektleitung ist<br>zu 60% Kommunikation.</h1>
+    <p class="lead">Woche 5. Du musst Lea über den Vendor-Verzug informieren, ohne Panik zu erzeugen. Gleichzeitig braucht das Team Klarheit über den neuen Plan. KI kann helfen – aber die Strategie musst du selbst wählen.</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Kommunikationsplan</div>
+    <h2 class="section-title">📡 Der PM-Kommunikationsplan</h2>
+    <p class="text">Ein Kommunikationsplan definiert: <strong>Wer bekommt was, wann, wie oft und in welchem Format?</strong></p>
+    <div style="overflow-x:auto;margin-top:16px">
+      <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:600px">
+        <thead>
+          <tr style="background:var(--navy);color:white">
+            <th style="padding:10px 14px;text-align:left;border-radius:8px 0 0 0;font-family:var(--font-display)">Stakeholder</th>
+            <th style="padding:10px 14px;text-align:left;font-family:var(--font-display)">Format</th>
+            <th style="padding:10px 14px;text-align:left;font-family:var(--font-display)">Frequenz</th>
+            <th style="padding:10px 14px;text-align:left;border-radius:0 8px 0 0;font-family:var(--font-display)">Inhalt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:white;border-bottom:1px solid var(--line)">
+            <td style="padding:10px 14px"><strong>Lea (Sponsorin)</strong></td>
+            <td style="padding:10px 14px">Executive Summary</td>
+            <td style="padding:10px 14px"><span class="tag tag-amber" style="font-size:11px">Wöchentlich</span></td>
+            <td style="padding:10px 14px">Status, Risiken, Entscheidungsbedarf</td>
+          </tr>
+          <tr style="background:var(--bg);border-bottom:1px solid var(--line)">
+            <td style="padding:10px 14px"><strong>Marco (PO)</strong></td>
+            <td style="padding:10px 14px">Sprint Review</td>
+            <td style="padding:10px 14px"><span class="tag tag-cyan" style="font-size:11px">Alle 2 Wochen</span></td>
+            <td style="padding:10px 14px">Features, Feedback, Backlog-Prio</td>
+          </tr>
+          <tr style="background:white;border-bottom:1px solid var(--line)">
+            <td style="padding:10px 14px"><strong>Nina (Dev)</strong></td>
+            <td style="padding:10px 14px">Daily Stand-up</td>
+            <td style="padding:10px 14px"><span class="tag tag-mint" style="font-size:11px">Täglich</span></td>
+            <td style="padding:10px 14px">Blocker, Tasks, Kapazität</td>
+          </tr>
+          <tr style="background:var(--bg)">
+            <td style="padding:10px 14px"><strong>Sam (Vendor)</strong></td>
+            <td style="padding:10px 14px">Status-Meeting</td>
+            <td style="padding:10px 14px"><span class="tag tag-purple" style="font-size:11px">Alle 2 Wochen</span></td>
+            <td style="padding:10px 14px">Integration-Status, Schnittstellen</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card card-info mt-16">
+      <strong>🤖 KI-Hilfe:</strong> KI kann Statusberichte aus Bullet Points aufbereiten, Meeting-Protokolle strukturieren und zielgruppengerechte Zusammenfassungen erstellen – spart bis zu 2 Stunden pro Woche.
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Mail-Generator</div>
+    <h2 class="section-title">✉️ Wie informierst du Lea?</h2>
+    <p class="text">Wähle deine Kommunikationsstrategie. Die KI generiert einen Entwurf – du bewertest ob er professionell ist.</p>
+    <div class="choice-grid">
+      <div class="choice-card" onclick="generateMail('transparent',this)"><b>📊 Transparent informieren</b><span>Problem, Auswirkung, drei Lösungsoptionen</span></div>
+      <div class="choice-card" onclick="generateMail('soft',this)"><b>🌸 Problem abschwächen</b><span>Positiv formulieren, Risiko minimieren</span></div>
+      <div class="choice-card" onclick="generateMail('escalate',this)"><b>🔥 Hart eskalieren</b><span>Maximalen Druck aufbauen</span></div>
+    </div>
+    <div id="mailOutput" class="card hidden" style="margin-top:16px;font-size:14px;line-height:1.75;font-family:var(--font-mono);background:#F9FBFF;border:1px solid var(--line)"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(10,'Kommunikator 📡',5);goTo(11)">Weiter zu Change Management →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 11 – CHANGE MANAGEMENT
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s11">
+  <div class="card card-mission" style="background:linear-gradient(135deg,#1A1530,#252045)">
+    <div class="eyebrow" style="color:#B8A0FF">⚡ Scope-Krise</div>
+    <h1 class="page-title">Woche 6: Marco ruft an.<br>"Ich brauche 5 neue Features."</h1>
+    <p class="lead" style="color:#D0C8FF">Marco: "Chat-Funktion, Dark Mode, Loyalty-Punkte, Social Sharing und AR-Features. Das wäre für den Launch super wichtig." Du bist in Woche 6 von 12. Was tust du?</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · Change Management & Scope Control</div>
+    <h2 class="section-title">🔄 Change Request Prozess</h2>
+    <p class="text">Scope Creep – die schleichende Ausweitung des Projektumfangs – ist einer der häufigsten Gründe für Projektverzug und Budgetüberschreitungen. Der Change Request Prozess schützt das Projekt:</p>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px;text-align:center">
+      <div class="mini" style="border-top:3px solid var(--coral)"><div style="font-size:22px;margin-bottom:6px">📝</div><p style="font-size:12px;font-weight:700">1. Änderung beschreiben</p></div>
+      <div class="mini" style="border-top:3px solid var(--amber)"><div style="font-size:22px;margin-bottom:6px">📊</div><p style="font-size:12px;font-weight:700">2. Impact analysieren</p><p style="font-size:11px">Zeit, Kosten, Qualität</p></div>
+      <div class="mini" style="border-top:3px solid var(--cyan)"><div style="font-size:22px;margin-bottom:6px">📋</div><p style="font-size:12px;font-weight:700">3. Optionen präsentieren</p></div>
+      <div class="mini" style="border-top:3px solid var(--purple)"><div style="font-size:22px;margin-bottom:6px">✅</div><p style="font-size:12px;font-weight:700">4. Entscheidung dokumentieren</p></div>
+      <div class="mini" style="border-top:3px solid var(--mint)"><div style="font-size:22px;margin-bottom:6px">🔄</div><p style="font-size:12px;font-weight:700">5. Plan anpassen</p></div>
+    </div>
+    <div class="card card-info mt-16">
+      <strong>🤖 KI-Hilfe:</strong> KI kann schnell einen Impact-Report für jeden Change Request erstellen: „Was bedeutet das Hinzufügen von Feature X für Sprint-Kapazität, Budget und Zeitplan?"
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Interaktion · Scope-Entscheidung</div>
+    <h2 class="section-title">🎯 Welche Features akzeptierst du?</h2>
+    <p class="text">Marco hat 5 Features gefordert. Du musst entscheiden: Welche kommen in v1.0, welche in v2.0 und welche lehnst du ab? Klicke auf jedes Feature, um deine Entscheidung zu treffen.</p>
+    <div id="featureDecisions"></div>
+    <div class="feedback-box" id="scopeFB"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="evalFeatures()">Entscheidungen bewerten</button>
+      <button class="btn btn-primary" onclick="complete(11,'Crisis Manager 🔥',6);goTo(12)" style="margin-left:auto">Weiter zu KI vs. Mensch →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 12 – KI VS. MENSCH + LESSONS LEARNED
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s12">
+  <div class="card card-mission">
+    <div class="eyebrow">Modul 11 · KI & Menschliche Führung</div>
+    <h1 class="page-title">Woche 11: Fast geschafft.<br>Was bleibt?</h1>
+    <p class="lead">Der Launch ist in einer Woche. Zeit für Lessons Learned – und eine ehrliche Bilanz: Was hat KI geleistet, was nur du?</p>
+  </div>
+
+  <div class="card card-theory">
+    <div class="eyebrow">Theorie · KI-Grenzen & Lessons Learned</div>
+    <h2 class="section-title">⚖️ Die PM-KI-Balance</h2>
+    <div class="grid-2 mt-16">
+      <div class="mini" style="border-left:4px solid var(--cyan)">
+        <h4>🤖 Was KI geleistet hat</h4>
+        <ul style="list-style:none;font-size:14px">
+          <li style="padding:5px 0">✅ Risikoliste in 3 Minuten statt 1 Stunde</li>
+          <li style="padding:5px 0">✅ Statusberichte für Lea automatisch aufbereitet</li>
+          <li style="padding:5px 0">✅ User Stories aus vagen Briefings strukturiert</li>
+          <li style="padding:5px 0">✅ Meeting-Protokolle zusammengefasst</li>
+          <li style="padding:5px 0">✅ Change-Impact-Analysen als Entwurf</li>
+        </ul>
+      </div>
+      <div class="mini" style="border-left:4px solid var(--amber)">
+        <h4>👤 Was nur du geleistet hast</h4>
+        <ul style="list-style:none;font-size:14px">
+          <li style="padding:5px 0">🎯 Entscheidung: Scope zurückhalten vs. Kunde enttäuschen</li>
+          <li style="padding:5px 0">🤝 Vendor-Eskalation deeskalieren</li>
+          <li style="padding:5px 0">💬 Team in Krisenmomenten motivieren</li>
+          <li style="padding:5px 0">🧭 Prioritäten unter Druck setzen</li>
+          <li style="padding:5px 0">🔐 Datenschutz & Compliance verantworten</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card card-success mt-16">
+      <strong>💡 Lessons Learned:</strong> KI ist ein Kraftmultiplikator für Entwurfsarbeit, Strukturierung und Kommunikation. Aber Projektführung – Entscheidungen treffen, Vertrauen aufbauen, Konflikte lösen – bleibt deine Aufgabe. <em>Good PMs use AI. Great PMs know when not to.</em>
+    </div>
+  </div>
+
+  <div class="card card-activity">
+    <div class="eyebrow">Reflexion · Lerntransfer</div>
+    <h2 class="section-title">📝 Deine persönliche Projektakte</h2>
+    <p class="text">Welche drei Erkenntnisse nimmst du aus diesem E-Learning mit? Schreibe mindestens 2–3 Sätze.</p>
+    <textarea class="prompt-input" id="reflectionText" placeholder="Meine wichtigsten Erkenntnisse aus dem Mission Lab..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" onclick="saveReflection()">Reflexion speichern</button>
+    </div>
+    <div class="feedback-box" id="reflFB"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="complete(12,'',6);goTo(13)">Weiter zur Projektakte →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 13 – PROJEKTABSCHLUSS + QUIZ + ZERTIFIKAT
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="screen" id="s13">
+  <div class="card card-mission">
+    <div class="eyebrow">🏁 Mission Complete – Fast</div>
+    <h1 class="page-title">Woche 12. Launch Day.<br>TechStart ist live. 🚀</h1>
+    <p class="lead">Die App ist im Store. Lea hat gratuliert. Das Team ist erleichtert. Du weisst: KI hat geholfen – aber die Entscheidungen hast du getroffen. Ein letzter Schritt fehlt noch: das Abschlussquiz.</p>
+    <div class="grid-stat">
+      <div class="stat"><span class="stat-value">✅</span><span class="stat-label">Scope gehalten</span></div>
+      <div class="stat"><span class="stat-value">12</span><span class="stat-label">Wochen on time</span></div>
+      <div class="stat"><span class="stat-value">4/5</span><span class="stat-label">Stakeholder satisfied</span></div>
+      <div class="stat"><span class="stat-value">🏆</span><span class="stat-label">Mission Complete</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Finale · Abschlussquiz</div>
+    <h2 class="section-title">🎓 Zeige was du gelernt hast</h2>
+    <p class="text">Beantworte alle 8 Fragen. Mindestens 75% für das Zertifikat.</p>
+    <div id="quizArea" class="mt-16"></div>
+    <div class="feedback-box" id="quizResult"></div>
+  </div>
+
+  <div id="certSection" class="hidden">
+    <div class="certificate">
+      <div class="cert-badge">🏆</div>
+      <div class="cert-title">AI-Powered Project Manager</div>
+      <div class="cert-subtitle">hat das Mission Lab erfolgreich abgeschlossen und das TechStart-Projekt von der Initiierung bis zum Go-Live geleitet.</div>
+      <div class="cert-name" id="certName">—</div>
+      <div style="color:rgba(255,255,255,.4);font-size:14px" id="certDate"></div>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap" id="certBadgesDisplay"></div>
+    </div>
+    <input class="input-field" id="nameInput" placeholder="Deinen vollständigen Namen eingeben…" style="max-width:400px;margin-top:20px" />
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="issueCert()">🎓 Zertifikat ausstellen</button>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// GLOBAL STATE
+// ═══════════════════════════════════════════════════════════
+let currentScreen = 0;
+let completed = {};
+let xp = 0;
+let earnedBadges = [];
+let quizIndex = 0;
+let quizScore = 0;
+let draggedEl = null;
+let tappedEl = null;
+
+const SCREENS = [
+  'Start', 'Projektbriefing', 'Stakeholder Mgmt', 'KI-Basics',
+  'Prompting', 'PM-KI-Tools', 'Requirements', 'Planung',
+  'Ressourcen', 'Risiken', 'Kommunikation', 'Change Mgmt',
+  'KI & Mensch', 'Quiz & Zertifikat'
+];
+
+const BADGE_DEF = [
+  { id: 0, icon: '🎯', name: 'Kickoff', el: 'b0' },
+  { id: 1, icon: '👥', name: 'Stakeholder Expert', el: 'b1' },
+  { id: 2, icon: '💬', name: 'Prompt Master', el: 'b2' },
+  { id: 3, icon: '🗺️', name: 'Planner', el: 'b3' },
+  { id: 4, icon: '⚠️', name: 'Risk Manager', el: 'b4' },
+  { id: 5, icon: '📡', name: 'Kommunikator', el: 'b5' },
+  { id: 6, icon: '🔥', name: 'Crisis Manager', el: 'b6' },
+];
+
+// ─── Build Navigation ───
+function buildNav() {
+  const nav = document.getElementById('nav');
+  nav.innerHTML = '';
+  const sections = [
+    { label: 'Intro', items: [0, 1] },
+    { label: 'Phase 1: Initiierung', items: [2, 3, 4] },
+    { label: 'Phase 2–3: Planung', items: [5, 6, 7, 8] },
+    { label: 'Phase 3–4: Umsetzung', items: [9, 10, 11] },
+    { label: 'Abschluss', items: [12, 13] },
+  ];
+  sections.forEach(sec => {
+    const label = document.createElement('div');
+    label.className = 'sidebar-label';
+    label.textContent = sec.label;
+    const section = document.createElement('div');
+    section.className = 'sidebar-section';
+    section.appendChild(label);
+    sec.items.forEach(i => {
+      const item = document.createElement('div');
+      item.className = 'navitem' + (i === 0 ? ' active' : '') + (completed[i] ? ' done' : '');
+      item.id = 'nav' + i;
+      item.onclick = () => goTo(i);
+      item.innerHTML = '<div class="nav-dot" id="dot' + i + '">' + (completed[i] ? '\u2713' : i) + '</div><div style="flex:1">' + SCREENS[i] + '</div><div class="nav-xp">+10</div>';
+      section.appendChild(item);
+    });
+    nav.appendChild(section);
+  });
+}
+
+function goTo(i) {
+  currentScreen = i;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('s' + i);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.navitem').forEach(n => n.classList.remove('active'));
+  const nav = document.getElementById('nav' + i);
+  if (nav) nav.classList.add('active');
+  document.getElementById('modCounter').textContent = String(i + 1).padStart(2, '0') + ' / ' + SCREENS.length;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function complete(screenIdx, badgeName, badgeId) {
+  if (!completed[screenIdx]) {
+    completed[screenIdx] = true;
+    xp += 10;
+    document.getElementById('xpBadge').textContent = xp + ' XP';
+    const dot = document.getElementById('dot' + screenIdx);
+    if (dot) dot.textContent = '✓';
+    const nav = document.getElementById('nav' + screenIdx);
+    if (nav) nav.classList.add('done');
+    const fill = Math.round(Object.keys(completed).length / SCREENS.length * 100);
+    document.getElementById('progFill').style.width = fill + '%';
+
+    if (badgeName && !earnedBadges.includes(badgeId)) {
+      earnedBadges.push(badgeId);
+      const bEl = document.getElementById('b' + badgeId);
+      if (bEl) {
+        bEl.classList.add('earned');
+        bEl.title = badgeName + ' – verdient!';
+        showMissionComplete(badgeName, screenIdx);
+      }
+    }
+  }
+}
+
+function showMissionComplete(badge, screenIdx) {
+  // Small toast notification instead of blocking
+  const toast = document.createElement('div');
+  toast.style.cssText = `position:fixed;bottom:24px;right:24px;background:var(--navy);color:white;padding:16px 20px;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.3);border:1px solid rgba(0,212,255,.2);z-index:1000;font-family:var(--font-display);font-weight:700;display:flex;align-items:center;gap:12px;animation:screenIn .3s ease;max-width:300px`;
+  toast.innerHTML = `<span style="font-size:28px">${BADGE_DEF.find(b => b.name === badge.split(' ').join(' '))?.icon || '🏆'}</span><div><div style="font-size:13px;opacity:.6;margin-bottom:2px">BADGE VERDIENT</div><div>${badge}</div></div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = '.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+// ─── Choice Handler ───
+function choose(el, correct, msg, fbId) {
+  const parent = el.closest('.choice-grid');
+  parent.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected', 'correct', 'wrong'));
+  el.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById(fbId);
+  if (fb) {
+    fb.classList.add('show', correct ? 'feedback-correct' : 'feedback-wrong');
+    fb.innerHTML = (correct ? '✅ ' : '⚠️ ') + msg;
+  }
+}
+
+// ─── Stakeholder Map ───
+const stakeQuads = {
+  manage: { t: '🎯 Intensiv Managen', d: 'Hohe Macht, Hohes Interesse: Diese Stakeholder aktiv einbinden, regelmässige Entscheidungsrunden, klare Verantwortungen.', ex: 'Beispiel TechStart: Marco (Product Owner) – er entscheidet über Features, muss im Scope-Management eng geführt werden.' },
+  satisfy: { t: '🤝 Zufriedenstellen', d: 'Hohe Macht, Tiefes Interesse: Regelmässig informieren, aber nicht mit Details überlasten. Auf Anfragen schnell reagieren.', ex: 'Beispiel TechStart: Lea (Sponsorin) – strategisch entscheidend, aber fokussiert auf Ergebnis, nicht tägliche Details.' },
+  inform: { t: '📣 Informieren', d: 'Niedrige Macht, Hohes Interesse: Transparent kommunizieren, aber keine tiefen Einbindungen nötig. Status-Updates genügen.', ex: 'Beispiel TechStart: Nina (Dev) – hohes Interesse an Anforderungen, aber keine formale Entscheidungsmacht.' },
+  monitor: { t: '👁 Beobachten', d: 'Niedrige Macht, Tiefes Interesse: Minimal aufwändige Kommunikation. Bei Änderungen proaktiv informieren.', ex: 'Beispiel TechStart: Sam (Vendor) – externes Interesse an klaren Specs, kaum Einfluss auf strategische Entscheidungen.' },
+};
+
+function showStakeQuad(q) {
+  const d = stakeQuads[q];
+  document.getElementById('stakeQuadDetail').innerHTML = `<strong>${d.t}</strong><br><br>${d.d}<br><br><em style="color:var(--ink3);font-size:13px">${d.ex}</em>`;
+}
+
+const stakeData = {
+  lea: { name: 'Lea Müller', role: 'Sponsorin & CFO', avatar: 'avatar-lea', emoji: '👩‍💼', quote: '"Ich brauche in drei Monaten ein sichtbares Ergebnis. Die Geschäftsleitung erwartet Fortschritt, keine Ausreden."', info: '<strong>Macht/Interesse:</strong> Hoch/Mittel · <strong>Strategie:</strong> Wöchentliche Executive Summaries<br><strong>KI-Hilfe:</strong> KI erstellt kompakte Status-Reports aus deinen Stichpunkten.' },
+  marco: { name: 'Marco Bianchi', role: 'Product Owner', emoji: '🙋‍♂️', avatar: 'avatar-marco', quote: '"Ich will möglichst viele Features. Was technisch realistisch ist, müsst ihr mir erklären – ich vertrete hier die Kunden."', info: '<strong>Macht/Interesse:</strong> Mittel/Hoch · <strong>Strategie:</strong> Sprint-Reviews, klare Scope-Grenzen setzen<br><strong>Risiko:</strong> Scope Creep! KI kann Impact-Analysen für jedes Feature-Request liefern.' },
+  nina: { name: 'Nina Kowalski', role: 'Lead Developer', emoji: '👩‍💻', avatar: 'avatar-nina', quote: '"Wenn Anforderungen ständig wechseln, verlieren wir Sprint-Kapazität und Qualität. Wir brauchen klare, stabile Requirements."', info: '<strong>Macht/Interesse:</strong> Niedrig/Hoch · <strong>Strategie:</strong> Daily Stand-ups, klare User Stories<br><strong>KI-Hilfe:</strong> KI kann User Stories aus Briefings strukturieren und Akzeptanzkriterien formulieren.' },
+  sam: { name: 'Sam Chen', role: 'Vendor (Zahlungsintegration)', emoji: '🤝', avatar: 'avatar-sam', quote: '"Unsere Schnittstelle ist machbar. Aber die API-Spezifikation muss früh final sein – Änderungen in laufenden Projekten kosten uns beide Zeit."', info: '<strong>Macht/Interesse:</strong> Niedrig/Niedrig · <strong>Strategie:</strong> Klare Spec-Dokumente, regelmässige Check-ins<br><strong>Risiko:</strong> Externe Abhängigkeit – frühzeitig kommunizieren!' },
+};
+
+function showStakeholder(k, el) {
+  document.querySelectorAll('.stake-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const d = stakeData[k];
+  document.getElementById('stakAvatar').className = 'avatar ' + d.avatar;
+  document.getElementById('stakAvatar').textContent = d.emoji;
+  document.getElementById('stakName').textContent = d.name;
+  document.getElementById('stakRole').textContent = d.role;
+  document.getElementById('stakQuote').textContent = d.quote;
+  document.getElementById('stakInfo').innerHTML = d.info;
+}
+
+// ─── Drag & Drop Helper ───
+function setupDragDrop(bankId, zoneSelector, itemSelector) {
+  document.addEventListener('dragstart', e => {
+    if (e.target.classList.contains('drag-item')) {
+      draggedEl = e.target;
+      e.target.classList.add('dragging');
+    } else if (e.target.classList.contains('phase-card')) {
+      draggedEl = e.target;
+    }
+  });
+  document.addEventListener('dragend', e => {
+    if (e.target.classList.contains('drag-item')) e.target.classList.remove('dragging');
+  });
+
+  document.querySelectorAll('.drop-zone').forEach(z => {
+    z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('over'); });
+    z.addEventListener('dragleave', () => z.classList.remove('over'));
+    z.addEventListener('drop', e => {
+      e.preventDefault();
+      z.classList.remove('over');
+      if (draggedEl && draggedEl.classList.contains('drag-item')) {
+        z.appendChild(draggedEl);
+        draggedEl = null;
+        updateKanbanCounts();
+      }
+    });
+    // Touch / click tap support
+    z.addEventListener('click', e => {
+      if (tappedEl) {
+        z.appendChild(tappedEl);
+        tappedEl.style.outline = '';
+        tappedEl = null;
+        updateKanbanCounts();
+      }
+    });
+  });
+
+  document.querySelectorAll('.drag-item').forEach(item => {
+    item.addEventListener('click', e => {
+      if (tappedEl) { tappedEl.style.outline = ''; }
+      tappedEl = item;
+      item.style.outline = '3px solid var(--cyan)';
+      e.stopPropagation();
+    });
+  });
+}
+
+// ─── Stake Matrix Check ───
+function checkStakeMatrix() {
+  const zones = { 'dz-manage': 'marco', 'dz-satisfy': 'lea', 'dz-inform': 'nina', 'dz-monitor': 'sam' };
+  let correct = 0, total = 4;
+  Object.entries(zones).forEach(([zoneId, expected]) => {
+    const zone = document.getElementById(zoneId);
+    if (zone) {
+      const items = zone.querySelectorAll('.drag-item');
+      items.forEach(item => { if (item.dataset.stake === expected) correct++; });
+    }
+  });
+  const fb = document.getElementById('stakeMatFB');
+  fb.classList.add('show');
+  if (correct === total) {
+    fb.classList.add('feedback-correct');
+    fb.innerHTML = '✅ Perfekt! Du hast alle Stakeholder korrekt eingeordnet. Marco (intensiv managen) hat hohe Macht und hohes Interesse. Lea (zufriedenstellen) hat hohe Macht aber ist mehr am Ergebnis als am Prozess interessiert. Nina (informieren) hat hohes Interesse aber keine formale Entscheidungsmacht. Sam (beobachten) hat spezifisches, begrenztes Interesse.';
+  } else {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = `⚠️ ${correct}/${total} korrekt. Tipp: Denke an formale Entscheidungsmacht (Macht) und wie stark jemand täglich involviert sein will (Interesse). Lea entscheidet strategisch, will aber keine täglichen Statusupdates.`;
+  }
+}
+
+function resetStakeMatrix() {
+  const bank = document.getElementById('stakeBank');
+  ['sdLea', 'sdMarco', 'sdNina', 'sdSam'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) bank.appendChild(el);
+  });
+  const fb = document.getElementById('stakeMatFB');
+  fb.classList.remove('show', 'feedback-correct', 'feedback-wrong');
+}
+
+// ─── AI Use Cases ───
+const aiCases = [
+  { q: 'Nina schlägt vor, KI automatisch Code-Reviews durchführen zu lassen.', correct: false, msg: 'Riskant ohne menschlichen Review. KI kann Code-Reviews unterstützen, aber nicht ersetzen – vor allem bei sicherheitsrelevanten Bereichen. Ein menschlicher Entwickler muss die Ergebnisse validieren.' },
+  { q: 'Du willst KI nutzen, um Stichwörter aus dem Sprint-Review in ein Protokoll umzuwandeln.', correct: true, msg: 'Sehr sinnvoll! Das ist ein klassischer KI-Anwendungsfall im PM: strukturiertes Dokument aus unstrukturierten Notizen erstellen. Spart 30–60 Minuten pro Meeting.' },
+  { q: 'Marco will KI direkt mit der Kundendatenbank verbinden, um automatisierte Reports zu erstellen.', correct: false, msg: 'Datenschutz-Risiko! Kundendaten dürfen nicht ohne Prüfung in externe KI-Tools fliessen. Zuerst Datenschutzkonzept klären, erst dann umsetzen.' },
+  { q: 'Du nutzt KI, um aus dem Projektbriefing eine erste Risikoliste zu generieren.', correct: true, msg: 'Perfekter Anwendungsfall. KI kennt typische Projektrisiken und kann schnell eine Startliste liefern. Du ergänzt dann projektspezifische Risiken und prüfst die Einschätzungen.' },
+];
+
+function buildAIUseCases() {
+  const container = document.getElementById('aiUseCases');
+  if (!container) return;
+  container.innerHTML = '';
+  aiCases.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginBottom = '12px';
+    div.innerHTML =
+      '<p style="font-size:15px;font-weight:600;margin-bottom:12px">' + c.q + '</p>' +
+      '<div class="choice-grid" style="grid-template-columns:1fr 1fr">' +
+        '<div class="choice-card ai-btn" data-idx="' + i + '" data-answer="true" data-correct="' + c.correct + '">' +
+          '<b>✅ Sinnvoll</b><span>KI-Einsatz empfehlen</span>' +
+        '</div>' +
+        '<div class="choice-card ai-btn" data-idx="' + i + '" data-answer="false" data-correct="' + c.correct + '">' +
+          '<b>❌ Nicht sinnvoll</b><span>Risiko oder nicht geeignet</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="feedback-box" id="aiFB' + i + '"></div>';
+    container.appendChild(div);
+  });
+  container.querySelectorAll('.ai-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(this.dataset.idx);
+      var answer = this.dataset.answer === 'true';
+      var correct = this.dataset.correct === 'true';
+      var isCorrect = (answer === correct);
+      this.closest('.choice-grid').querySelectorAll('.choice-card').forEach(function(c){ c.classList.remove('correct','wrong'); });
+      this.classList.add(isCorrect ? 'correct' : 'wrong');
+      var fb = document.getElementById('aiFB' + idx);
+      if (fb) {
+        fb.classList.add('show', isCorrect ? 'feedback-correct' : 'feedback-wrong');
+        fb.innerHTML = (isCorrect ? '✅ ' : '⚠️ ') + aiCases[idx].msg;
+      }
+    });
+  });
+}
+
+// ─── Prompt Coach ───
+function checkPrompt() {
+  const t = document.getElementById('promptInput').value.toLowerCase();
+  let score = 0, tips = [];
+  if (t.includes('du bist') || t.includes('als ') || t.includes('rolle')) { score++; } else tips.push('Rolle fehlt ("Du bist ein…")');
+  if (t.includes('aufgabe') || t.includes('erstelle') || t.includes('analysiere') || t.includes('schreibe')) { score++; } else tips.push('Aufgabe unklar ("Erstelle / Analysiere…")');
+  if (t.includes('techstart') || t.includes('12 wochen') || t.includes('kontext') || t.includes('projekt')) { score++; } else tips.push('Umfeld/Kontext fehlt (Projektdetails)');
+  if (t.includes('format') || t.includes('tabelle') || t.includes('liste') || t.includes('stichpunkte') || t.includes('bericht')) { score++; } else tips.push('Format fehlt ("Als Tabelle / Liste…")');
+
+  const fb = document.getElementById('promptFB');
+  fb.classList.add('show');
+  const pct = score / 4 * 100;
+  if (score === 4) {
+    fb.classList.add('feedback-correct');
+    fb.innerHTML = `<strong>🏆 Perfekter Prompt! Score: 4/4</strong><br>Alle vier RAUF-Elemente sind vorhanden. Die KI wird präzise antworten.`;
+  } else if (score >= 2) {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = `<strong>📊 Prompt-Score: ${score}/4</strong><br>Fast da! Verbesserungen: <em>${tips.join(', ')}</em>`;
+  } else {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = `<strong>⚠️ Prompt-Score: ${score}/4</strong><br>Der Prompt braucht mehr Klarheit. Fehlend: <em>${tips.join(', ')}</em>`;
+  }
+}
+
+function loadPromptTemplate() {
+  document.getElementById('promptInput').value = 'Du bist ein erfahrener Projektmanager mit Expertise in Stakeholder Management.\n\nAufgabe: Erstelle eine Stakeholder-Analyse für das TechStart-Projekt.\n\nUmfeld: App-Launch in 12 Wochen, CHF 120k Budget, 8 Personen, vier Stakeholder: Lea (Sponsorin), Marco (Product Owner), Nina (Lead Dev), Sam (Vendor für Zahlungsintegration).\n\nFormat: Tabelle mit Spalten: Stakeholder | Rolle | Interesse | Macht | Strategie | Kommunikationsfrequenz';
+}
+
+// ─── PM-KI-Tools ───
+const tools = [
+  { name: 'Microsoft Copilot', logo: '🪟', color: '#00A4EF', tagline: 'Teams, Planner & Office-Integration', use: 'Meeting-Zusammenfassungen, Aufgaben aus Meetings, Planner-Integration, Teams-Status', pro: 'Ideal wenn Team bereits in M365 arbeitet; nahtlose Integration', limit: 'Weniger geeignet für agile Sprints; abhängig von M365-Lizenz', ex: 'TechStart: Copilot fasst das Weekly-Meeting zusammen und erstellt automatisch Planner-Tasks für das Team.' },
+  { name: 'Jira + Atlassian AI', logo: '🔵', color: '#0052CC', tagline: 'Agile Sprints, Bugs & Backlog', use: 'Sprint-Planung, Bug-Tracking, User Stories, Abhängigkeiten, Release-Planung', pro: 'Standard für Software-Entwicklungsteams; tiefe Agile-Unterstützung', limit: 'Steil Lernkurve; nicht ideal für nicht-technische Teams', ex: 'TechStart: Jira AI schlägt automatisch Story Points vor und erkennt Abhängigkeiten zwischen den Sprint-Items.' },
+  { name: 'Asana AI', logo: '🌿', color: '#F06A6A', tagline: 'Workflows & Team-Koordination', use: 'Workflow-Automatisierung, Task-Priorität, Statusupdates, Projekt-Templates', pro: 'Intuitiv; stark bei cross-funktionalen Teams; schöne Visualisierungen', limit: 'Weniger technisch als Jira; limitierte Agile-Boards', ex: 'TechStart: Asana AI schlägt proaktiv Prioritäten vor wenn Tasks überfällig sind und informiert den PL.' },
+  { name: 'Monday.com AI', logo: '🟡', color: '#FF3D57', tagline: 'Visuell & Automatisierung', use: 'Boards, Automatisierungen, Dashboards, Statusübersichten, bereichsübergreifende Projekte', pro: 'Sehr visuell; einfache Automatisierungen; schnell einzurichten', limit: 'Kann unübersichtlich werden; Kosten skalieren mit Teamgrösse', ex: 'TechStart: Monday.com AI erstellt wöchentlich automatisch einen Status-Report für Lea mit Ampel-Bewertung.' },
+  { name: 'Notion AI', logo: '📓', color: '#000000', tagline: 'Docs, Wiki & Projektdokumentation', use: 'Projektdokumentation, Wikis, Meeting Notes, Lessons Learned, Requirements-Docs', pro: 'Hervorragend für Dokumentation; flexible Datenbanken; KI fasst Docs zusammen', limit: 'Schwach für echtes Task-Tracking und agile Sprints', ex: 'TechStart: Notion AI fasst alle Sprint-Retrospektiven zusammen und generiert einen Lessons-Learned-Report.' },
+  { name: 'Smartsheet AI', logo: '📊', color: '#00AA4B', tagline: 'Portfolio, Ressourcen & Reporting', use: 'Portfolio-Übersichten, Ressourcenplanung, Gantt-Diagramme, automatisches Reporting', pro: 'Stark für tabellenbasierte Planung; gut für Ressourcen-Management', limit: 'Weniger intuitiv als moderne PM-Tools; teuer für kleine Teams', ex: 'TechStart: Smartsheet AI erkennt, dass Nina zu 120% verplant ist und schlägt Task-Umverteilung vor.' },
+  { name: 'ClickUp AI', logo: '⚡', color: '#7C3AED', tagline: 'All-in-One PM Suite', use: 'Tasks, Docs, Ziele, Zeiterfassung, Berichte, Zusammenfassungen', pro: 'Alles in einem Tool; sehr günstig; KI für Texte und Zusammenfassungen', limit: 'Feature-Überladung; KI-Qualität uneinheitlich', ex: 'TechStart: ClickUp AI erstellt aus Marcos Feature-Requests automatisch eine priorisierte Backlog-Liste.' },
+];
+
+function buildToolGrid() {
+  const grid = document.getElementById('toolGrid');
+  if (!grid) return;
+  tools.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    card.onclick = () => { card.classList.toggle('active'); };
+    card.innerHTML = `
+      <div class="tool-logo" style="background:${t.color}20;color:${t.color}">${t.logo}</div>
+      <div class="tool-name">${t.name}</div>
+      <div class="tool-tagline">${t.tagline}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag tag-cyan" style="font-size:11px">Zum Öffnen klicken</span>
+      </div>
+      <div class="tool-detail">
+        <div style="margin-bottom:8px"><strong>Einsatzgebiet:</strong> ${t.use}</div>
+        <div style="margin-bottom:8px"><span style="color:var(--mint)">✅</span> <strong>Stärken:</strong> ${t.pro}</div>
+        <div style="margin-bottom:8px"><span style="color:var(--coral)">⚠️</span> <strong>Grenzen:</strong> ${t.limit}</div>
+        <div style="background:var(--amber-bg);padding:10px;border-radius:8px;border-left:3px solid var(--amber)"><strong>TechStart-Beispiel:</strong> ${t.ex}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+let selStack = [];
+function toggleTool(el) {
+  const key = el.dataset.stack;
+  if (key === 'none') {
+    document.querySelectorAll('#stackCards .choice-card').forEach(c => c.classList.remove('selected'));
+    selStack = ['none'];
+    el.classList.add('selected');
+    return;
+  }
+  const noneEl = document.querySelector('#stackCards .choice-card[data-stack="none"]');
+  if (noneEl) noneEl.classList.remove('selected');
+  selStack = selStack.filter(x => x !== 'none');
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selStack = selStack.filter(x => x !== key);
+  } else {
+    if (selStack.length >= 3) { alert('Maximal 3 Tools auswählen.'); return; }
+    el.classList.add('selected');
+    selStack.push(key);
+  }
+}
+
+function evalStack() {
+  const fb = document.getElementById('stackFB');
+  fb.classList.add('show');
+  if (selStack.length === 0) { fb.innerHTML = '⚠️ Wähle mindestens ein Tool.'; return; }
+  if (selStack.includes('none')) {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = '<strong>Risiko:</strong> Nur mit Mail & Excel verliert ein 8-köpfiges Team schnell Transparenz. Du brauchst mindestens ein zentrales Task-Board, um Verantwortlichkeiten und Status sichtbar zu machen.';
+    return;
+  }
+  let msg = '<strong>✅ Dein TechStart-Stack:</strong><br><br>';
+  if (selStack.includes('chatgpt')) msg += '• <strong>ChatGPT/Claude</strong> für Entwürfe, Brainstorming und Kommunikationsvorlagen.<br>';
+  if (selStack.includes('jira')) msg += '• <strong>Jira</strong> für Backlog, Sprints, Bugs und technische Abhängigkeiten.<br>';
+  if (selStack.includes('copilot')) msg += '• <strong>Microsoft Copilot</strong> für Meeting-Zusammenfassungen und M365-Integration.<br>';
+  if (selStack.includes('asana')) msg += '• <strong>Asana</strong> für Workflows, Teamkoordination und Statusübersicht.<br>';
+  if (selStack.includes('smartsheet')) msg += '• <strong>Smartsheet</strong> für Ressourcenplanung und Management-Reporting.<br>';
+  msg += '<br><strong>PM-Erkenntnis:</strong> Ein gutes Tool ersetzt keinen Projektplan – es macht Abhängigkeiten, Verantwortlichkeiten und Risiken sichtbarer.';
+  fb.classList.add('feedback-correct');
+  fb.innerHTML = msg;
+}
+
+// ─── Requirements Drag & Drop ───
+function checkReqs() {
+  let correct = 0, total = 0;
+  const fZone = document.getElementById('dz-functional');
+  const nfZone = document.getElementById('dz-nonfunctional');
+  if (fZone) fZone.querySelectorAll('.drag-item').forEach(i => { total++; if (i.dataset.type === 'functional') correct++; });
+  if (nfZone) nfZone.querySelectorAll('.drag-item').forEach(i => { total++; if (i.dataset.type === 'nonfunctional') correct++; });
+  const fb = document.getElementById('reqFB');
+  fb.classList.add('show');
+  if (correct === total && total > 0) {
+    fb.classList.add('feedback-correct');
+    fb.innerHTML = `✅ Perfekt! ${correct}/${total} korrekt sortiert. Funktionale Anforderungen beschreiben WAS das System tun soll. Nicht-funktionale beschreiben WIE GUT (Performance, Sicherheit, Skalierbarkeit).`;
+  } else {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = `⚠️ ${correct}/${total} korrekt. Tipp: Funktional = konkrete Aktion ("Nutzer kann X"). Nicht-funktional = Qualitätsmerkmal (Geschwindigkeit, Sicherheit, Sprache).`;
+  }
+}
+
+function resetReqs() {
+  const bank = document.getElementById('reqBank');
+  document.querySelectorAll('#dz-functional .drag-item, #dz-nonfunctional .drag-item').forEach(el => bank.appendChild(el));
+  const fb = document.getElementById('reqFB');
+  if (fb) fb.classList.remove('show', 'feedback-correct', 'feedback-wrong');
+}
+
+// ─── Roadmap ───
+let selPhase = null;
+function setupRoadmap() {
+  document.querySelectorAll('.road-slot').forEach(slot => {
+    slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('over'); });
+    slot.addEventListener('dragleave', () => slot.classList.remove('over'));
+    slot.addEventListener('drop', e => {
+      e.preventDefault(); slot.classList.remove('over');
+      if (draggedEl && draggedEl.classList.contains('phase-card')) placePhaseCard(slot, draggedEl);
+    });
+    slot.addEventListener('click', () => {
+      if (selPhase) { placePhaseCard(slot, selPhase); selPhase.style.outline = ''; selPhase = null; }
+    });
+  });
+  document.querySelectorAll('.phase-card').forEach(card => {
+    card.addEventListener('dragstart', e => { draggedEl = card; });
+    card.addEventListener('click', e => {
+      if (selPhase) selPhase.style.outline = '';
+      selPhase = card;
+      card.style.outline = '3px solid var(--cyan)';
+      e.stopPropagation();
+    });
+  });
+}
+
+function placePhaseCard(slot, card) {
+  const existing = slot.querySelector('.phase-card');
+  if (existing) document.getElementById('phaseBank').appendChild(existing);
+  slot.appendChild(card);
+}
+
+function checkRoadmap() {
+  const slots = [...document.querySelectorAll('.road-slot')];
+  const order = slots.map(s => s.querySelector('.phase-card')?.dataset.order || null);
+  const fb = document.getElementById('roadmapFB');
+  fb.classList.add('show');
+  if (order.includes(null)) {
+    fb.innerHTML = '⚠️ Lege erst alle vier Phasen auf die Roadmap.';
+    return;
+  }
+  if (JSON.stringify(order) === JSON.stringify(['1','2','3','4'])) {
+    fb.classList.add('feedback-correct');
+    fb.innerHTML = '✅ Sehr gut! Requirements zuerst klären, dann Design & Setup, danach Entwicklung & Testing und zum Schluss Launch & Abschluss – das ist eine saubere Projektlogik.';
+  } else {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = '⚠️ Fast. Die korrekte Reihenfolge: Requirements & Scope → Design & Setup → Entwicklung & Testing → Launch & Abschluss.';
+  }
+}
+
+function resetRoadmap() {
+  const bank = document.getElementById('phaseBank');
+  document.querySelectorAll('.road-slot .phase-card').forEach(c => bank.appendChild(c));
+  const fb = document.getElementById('roadmapFB');
+  if (fb) fb.classList.remove('show', 'feedback-correct', 'feedback-wrong');
+}
+
+// ─── Kanban Board ───
+const kanbanTasks = [
+  { id: 'k1', title: '🔐 Login-Flow implementieren', assignee: 'Nina', sprint: 'todo', prio: 'high' },
+  { id: 'k2', title: '📄 PDF-Rechnungsdownload', assignee: 'Dev', sprint: 'todo', prio: 'high' },
+  { id: 'k3', title: '🔔 Push-Notifications Setup', assignee: 'Nina', sprint: 'todo', prio: 'mid' },
+  { id: 'k4', title: '🎨 UI Design finalisieren', assignee: 'Designer', sprint: 'backlog', prio: 'mid' },
+  { id: 'k5', title: '🔌 Vendor API Specs prüfen', assignee: 'Sam', sprint: 'doing', prio: 'high' },
+  { id: 'k6', title: '📊 Analytics Integration', assignee: 'Dev', sprint: 'backlog', prio: 'low' },
+  { id: 'k7', title: '♿ Accessibility Audit', assignee: 'QA', sprint: 'backlog', prio: 'mid' },
+  { id: 'k8', title: '📱 App Store Screenshots', assignee: 'Design', sprint: 'backlog', prio: 'low' },
+];
+
+function buildKanban() {
+  const board = document.getElementById('kanbanBoard');
+  if (!board) return;
+  kanbanTasks.forEach(t => {
+    const col = document.getElementById('col-' + t.sprint);
+    if (!col) return;
+    const task = document.createElement('div');
+    task.className = 'kanban-task';
+    task.draggable = true;
+    task.id = t.id;
+    var prioBg = t.prio==='high'?'#FFE0DF':t.prio==='mid'?'#FFF3C4':'#DDEFFF';
+      var prioColor = t.prio==='high'?'#C0001A':t.prio==='mid'?'#A06000':'#004A99';
+      var prioLabel = t.prio==='high'?'🔴 Hoch':t.prio==='mid'?'🟡 Mittel':'🔵 Tief';
+      task.innerHTML = t.title + '<div class="task-meta"><span class="task-tag" style="background:' + prioBg + ';color:' + prioColor + '">' + prioLabel + '</span><span>👤 ' + t.assignee + '</span></div>';
+    task.addEventListener('dragstart', e => { draggedEl = task; });
+    col.appendChild(task);
+  });
+  updateKanbanCounts();
+}
+
+function updateKanbanCounts() {
+  ['backlog','todo','doing','done'].forEach(id => {
+    const col = document.getElementById('col-' + id);
+    const cnt = document.getElementById('cnt-' + id);
+    if (col && cnt) cnt.textContent = col.querySelectorAll('.kanban-task').length;
+  });
+}
+
+// ─── Risk Matrix ───
+function buildRiskMatrix() {
+  const matrix = document.getElementById('riskMatrix');
+  if (!matrix) return;
+  matrix.innerHTML = '';
+  // Build from top (impact 5) to bottom (impact 1)
+  for (let y = 5; y >= 1; y--) {
+    // Y-axis label
+    const yLabel = document.createElement('div');
+    yLabel.className = 'risk-axis vert';
+    yLabel.textContent = 'Auswirkung ' + y;
+    yLabel.style.fontSize = '9px';
+    matrix.appendChild(yLabel);
+    for (let x = 1; x <= 5; x++) {
+      const score = x * y;
+      const cell = document.createElement('div');
+      cell.className = 'risk-cell ' + (score <= 4 ? 'r-low' : score <= 10 ? 'r-mid' : score <= 16 ? 'r-high' : 'r-critical');
+      cell.textContent = score;
+      cell.onclick = () => {
+        document.querySelectorAll('.risk-cell').forEach(c => c.classList.remove('selected'));
+        cell.classList.add('selected');
+        const adv = document.getElementById('riskAdvice');
+        if (adv) { adv.style.display = 'block'; var advText = score<=4 ? '🟢 Beobachten – kein sofortiger Handlungsbedarf.' : score<=10 ? '🟡 Massnahme planen – in nächstem Sprint adressieren.' : score<=16 ? '🔴 Sofort priorisieren und an Lea eskalieren!' : '🚨 Kritisch! Projekt-Stopp erwägen, sofortige Eskalation.';
+        adv.innerHTML = '<strong>Score ' + score + '</strong> (W' + x + ' × A' + y + '): ' + advText; }
+        var kat = score<=4?'TIEF':score<=10?'MITTEL':score<=16?'HOCH':'KRITISCH';
+        document.getElementById('riskInfo').innerHTML = '<strong>Risiko-Score: '+score+'</strong><br>Wahrscheinlichkeit '+x+' \u00d7 Auswirkung '+y+'<br><em>Kategorie: '+kat+'</em>';
+      };
+      matrix.appendChild(cell);
+    }
+  }
+  // X-axis labels
+  const empty = document.createElement('div');
+  matrix.appendChild(empty);
+  for (let x = 1; x <= 5; x++) {
+    const xl = document.createElement('div');
+    xl.className = 'risk-axis';
+    xl.textContent = 'W' + x;
+    xl.style.fontSize = '10px';
+    matrix.appendChild(xl);
+  }
+}
+
+// ─── Mail Generator ───
+const mailTemplates = {
+  transparent: `<strong>Betreff:</strong> TechStart Update – Vendor-Verzögerung und Massnahmenplan<br><br>
+Guten Tag Lea<br><br>
+Ich informiere Sie frühzeitig über ein Terminrisiko. Vendor Sam meldet eine Verzögerung von 2 Wochen bei der Zahlungsschnittstelle (neu: Woche 7 statt Woche 5). Das gefährdet den Go-Live, wenn wir nicht handeln.<br><br>
+<strong>Drei Optionen:</strong><br>
+A) Scope reduzieren: Zahlungsintegration in v1.1 verschieben<br>
+B) Ressourcen erhöhen: +CHF 8k für externen Developer<br>
+C) Go-Live um 1 Woche verschieben (Woche 13)<br><br>
+Ich empfehle Option A. Für eine Entscheidung bis Freitag wäre ich dankbar.<br><br>
+Freundliche Grüsse<br>
+<em>[Dein Name], Projektleitung TechStart</em>`,
+  soft: `<div style="color:var(--coral);font-weight:700">⚠️ Feedback: Zu vage</div><br>
+Diese Version verschleiert das Problem. Lea entscheidet strategisch – sie braucht klare Fakten, keine Beschwichtigung. Stakeholder die ein Problem zu spät erfahren, verlieren Vertrauen in die Projektleitung.<br><br>
+<strong>PM-Merksatz:</strong> "Bad news early is better than bad news late."`,
+  escalate: `<div style="color:var(--coral);font-weight:700">⚠️ Feedback: Zu hart</div><br>
+Maximaldruck ohne Lösungsoptionen bringt nichts. Lea fühlt sich unter Druck gesetzt und reagiert defensiv. Professionelle Kommunikation bleibt auch in Krisen lösungsorientiert: Problem benennen, Optionen liefern, Entscheidung erbitten.`,
+};
+
+function generateMail(type, el) {
+  document.querySelectorAll('#s10 .choice-card').forEach(c => c.classList.remove('selected', 'correct', 'wrong'));
+  el.classList.add(type === 'transparent' ? 'correct' : 'wrong');
+  const out = document.getElementById('mailOutput');
+  out.classList.remove('hidden');
+  out.innerHTML = mailTemplates[type];
+}
+
+// ─── Feature Decisions ───
+const featureList = [
+  { name: '💬 Chat-Funktion', correct: 'v2', reason: 'Chat braucht eigene Infrastruktur (Real-time, DSGVO, Moderation). Zu gross für v1.0 in Woche 6.' },
+  { name: '🌙 Dark Mode', correct: 'v2', reason: 'Nice to have, aber kein Launch-Blocker. Gutes Feature für v1.1.' },
+  { name: '🎁 Loyalty-Punkte', correct: 'reject', reason: 'Erfordert Backend-Logik, Datenbankmodell und Business-Entscheidungen. Kein Scope für 6 Wochen Restlaufzeit.' },
+  { name: '📱 Social Sharing', correct: 'v2', reason: 'Einfacher zu implementieren als die anderen, aber trotzdem nicht Launch-kritisch.' },
+  { name: '🕶️ AR-Features', correct: 'reject', reason: 'AR ist ein komplett neues Technologie-Stack. Realitätsferner Change Request – klares Nein mit Begründung.' },
+];
+
+function buildFeatureDecisions() {
+  const container = document.getElementById('featureDecisions');
+  if (!container) return;
+  featureList.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginBottom = '12px';
+    div.innerHTML = `
+      <p style="font-size:15px;font-weight:700;margin-bottom:10px">${f.name}</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <button class="choice-card btn-sm" onclick="decideFeature(this,'v1',${i})" style="text-align:center;padding:10px"><b>✅ v1.0</b><span style="display:block;font-size:12px">Jetzt einbauen</span></button>
+        <button class="choice-card btn-sm" onclick="decideFeature(this,'v2',${i})" style="text-align:center;padding:10px"><b>📅 v2.0</b><span style="display:block;font-size:12px">Nächster Release</span></button>
+        <button class="choice-card btn-sm" onclick="decideFeature(this,'reject',${i})" style="text-align:center;padding:10px"><b>❌ Ablehnen</b><span style="display:block;font-size:12px">Mit Begründung</span></button>
+      </div>
+      <div class="feedback-box" id="featFB${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+let featDecisions = {};
+function decideFeature(el, decision, idx) {
+  const parent = el.closest('.card').querySelectorAll('.choice-card');
+  parent.forEach(c => c.classList.remove('correct', 'wrong', 'selected'));
+  featDecisions[idx] = decision;
+  const f = featureList[idx];
+  const isCorrect = (decision === f.correct);
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+  const fb = document.getElementById('featFB' + idx);
+  if (fb) {
+    fb.classList.add('show', isCorrect ? 'feedback-correct' : 'feedback-wrong');
+    fb.innerHTML = (isCorrect ? '✅ ' : '⚠️ ') + f.reason;
+  }
+}
+
+function evalFeatures() {
+  const correct = Object.entries(featDecisions).filter(([i, d]) => d === featureList[i].correct).length;
+  const total = featureList.length;
+  const fb = document.getElementById('scopeFB');
+  fb.classList.add('show');
+  if (correct >= 4) {
+    fb.classList.add('feedback-correct');
+    fb.innerHTML = `✅ ${correct}/${total} korrekte Entscheidungen. Gutes Scope-Management: Du schützt den Go-Live ohne den Kunden zu verprellen. v2.0 bietet dir einen Weg, Features trotzdem zu liefern.`;
+  } else {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = `⚠️ ${correct}/${total} korrekt. Denke daran: In Woche 6 von 12 ist jedes neue Feature ein Risiko für den Go-Live. Verwende immer den Change-Request-Prozess.`;
+  }
+}
+
+// ─── Reflection ───
+function saveReflection() {
+  const t = document.getElementById('reflectionText').value.trim();
+  const fb = document.getElementById('reflFB');
+  fb.classList.add('show');
+  if (t.length < 30) {
+    fb.classList.add('feedback-wrong');
+    fb.innerHTML = '⚠️ Schreibe mindestens 2–3 vollständige Sätze für eine sinnvolle Reflexion.';
+  } else {
+    fb.classList.add('feedback-correct');
+    fb.innerHTML = '✅ Reflexion gespeichert. Du hast das Gelernte aktiv auf deinen Kontext übertragen – das ist der wichtigste Schritt für nachhaltiges Lernen.';
+    xp += 5;
+    document.getElementById('xpBadge').textContent = xp + ' XP';
+  }
+}
+
+// ─── QUIZ ───
+const quizQuestions = [
+  { q: 'Welche vier Elemente enthält ein guter PM-Prompt (RAUF-Formel)?', opts: ['Rolle, Aufgabe, Umfeld, Format', 'Budget, Risiko, Team, Tool', 'Ziel, Datum, Firma, Output'], a: 0, ex: 'Die RAUF-Formel: Rolle (wer soll die KI sein), Aufgabe (was soll erstellt werden), Umfeld (Projektkontext) und Format (wie soll die Antwort aussehen).' },
+  { q: 'Was ist "Scope Creep"?', opts: ['Ein technischer Fehler in der Entwicklung', 'Die schleichende Ausweitung des Projektumfangs ohne Ressourcenanpassung', 'Eine schnelle Projektabschluss-Methode'], a: 1, ex: 'Scope Creep entsteht durch kleine Zusagen ("das ist doch schnell gemacht") und führt unbemerkt zu Terminverzug und Budgetüberschreitung.' },
+  { q: 'Wie lautet die richtige Stakeholder-Strategie für jemanden mit hoher Macht und hohem Interesse?', opts: ['Beobachten', 'Informieren', 'Intensiv managen'], a: 2, ex: 'Hohe Macht + Hohes Interesse = Intensiv managen. Diese Stakeholder müssen in Entscheidungen eingebunden werden und erwarten regelmässige, detaillierte Updates.' },
+  { q: 'Welche Aussage zu KI im Projektmanagement ist korrekt?', opts: ['KI kann Projektverantwortung vollständig übernehmen', 'KI liefert Entwürfe, die die PM-Kompetenz ergänzen – nicht ersetzen', 'KI darf immer mit Kundendaten arbeiten'], a: 1, ex: 'KI ist ein Kraftmultiplikator für Entwurfsarbeit, Strukturierung und Kommunikation. Führungsverantwortung bleibt beim Menschen.' },
+  { q: 'Was beschreibt eine nicht-funktionale Anforderung?', opts: ['Was die App konkret tut (z.B. Login-Funktion)', 'Wie gut oder unter welchen Bedingungen etwas funktioniert (z.B. Ladezeit < 2s)', 'Wer im Team die Funktion entwickelt'], a: 1, ex: 'Nicht-funktionale Anforderungen beschreiben Qualitätsmerkmale: Performance, Sicherheit, Barrierefreiheit, Skalierbarkeit.' },
+  { q: 'Welches Tool passt am besten für Software-Backlog, Sprints und Bug-Tracking?', opts: ['Notion AI', 'Jira + Atlassian AI', 'Smartsheet AI'], a: 1, ex: 'Jira ist der Standard für agile Software-Entwicklungsteams. Atlassian AI ergänzt mit automatischen Story Points, Sprint-Insights und Abhängigkeitserkennung.' },
+  { q: 'Vendor Sam meldet 2 Wochen Verzug. Was ist die professionellste Reaktion?', opts: ['Abwarten und hoffen dass er aufholt', 'Lea sofort informieren mit Problem, Auswirkung und drei Lösungsoptionen', 'Sam sofort fristlos ersetzen'], a: 1, ex: '"Bad news early is better than bad news late." Transparente Kommunikation mit Lösungsoptionen stärkt das Vertrauen der Sponsorin, auch in Krisenzeiten.' },
+  { q: 'Was ist der erste Schritt im Change-Request-Prozess?', opts: ['Direkt zusagen um den Kunden zufriedenzustellen', 'Die Änderung ablehnen um den Scope zu schützen', 'Die Änderung beschreiben und den Impact auf Zeit, Kosten und Qualität analysieren'], a: 2, ex: 'Change Requests müssen bewertet werden: Was genau soll sich ändern? Was kostet das in Zeit und Geld? Erst dann kann fundiert entschieden werden.' },
+];
+
+function renderQuiz() {
+  const area = document.getElementById('quizArea');
+  if (!area) return;
+  if (quizIndex >= quizQuestions.length) {
+    const pct = Math.round(quizScore / quizQuestions.length * 100);
+    area.innerHTML = '';
+    const res = document.getElementById('quizResult');
+    res.classList.add('show');
+    if (pct >= 75) {
+      res.classList.add('feedback-correct');
+      res.innerHTML = `
+        <div class="score-circle"><span class="score-number">${pct}%</span></div>
+        <p style="text-align:center;font-size:18px;font-weight:700;margin-bottom:8px">${quizScore} von ${quizQuestions.length} richtig</p>
+        <p style="text-align:center;color:var(--mint)">✅ Bestanden! Du erhältst dein Zertifikat.</p>`;
+      complete(13, '', -1);
+      document.getElementById('certSection').classList.remove('hidden');
+      document.getElementById('certDate').textContent = new Date().toLocaleDateString('de-CH', { year: 'numeric', month: 'long', day: 'numeric' });
+    } else {
+      res.classList.add('feedback-wrong');
+      res.innerHTML = `
+        <div class="score-circle" style="background:linear-gradient(135deg,var(--coral),#FF8A80)"><span class="score-number">${pct}%</span></div>
+        <p style="text-align:center;font-size:18px;font-weight:700;margin-bottom:8px">${quizScore} von ${quizQuestions.length} richtig</p>
+        <p style="text-align:center;color:var(--coral)">⚠️ Noch nicht bestanden (75% nötig). Wiederhole das Quiz.</p>
+        <div class="btn-row" style="justify-content:center;margin-top:16px"><button class="btn btn-primary" onclick="restartQuiz()">Quiz wiederholen</button></div>`;
+    }
+    return;
+  }
+  const q = quizQuestions[quizIndex];
+  area.innerHTML = `
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:8px;font-family:var(--font-mono)">Frage ${quizIndex + 1} / ${quizQuestions.length}</div>
+    <div style="background:var(--bg);border-radius:8px;height:6px;margin-bottom:20px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));width:${(quizIndex/quizQuestions.length*100)}%;border-radius:8px;transition:.3s"></div></div>
+    <p style="font-size:17px;font-weight:700;margin-bottom:16px;line-height:1.5">${q.q}</p>
+    <div class="choice-grid">
+      ${q.opts.map((opt, i) => `<div class="choice-card" onclick="answerQuiz(${i})"><span class="choice-letter">${String.fromCharCode(65+i)}</span><b>${opt}</b></div>`).join('')}
+    </div>
+    <div class="feedback-box" id="qFB"></div>`;
+}
+
+function answerQuiz(i) {
+  const q = quizQuestions[quizIndex];
+  const cards = document.querySelectorAll('#quizArea .choice-card');
+  cards.forEach(c => { c.style.pointerEvents = 'none'; });
+  cards[i].classList.add(i === q.a ? 'correct' : 'wrong');
+  if (i === q.a) { cards[i].classList.add('correct'); quizScore++; }
+  else { cards[q.a].classList.add('correct'); }
+  const fb = document.getElementById('qFB');
+  if (fb) {
+    fb.classList.add('show', i === q.a ? 'feedback-correct' : 'feedback-wrong');
+    fb.innerHTML = (i === q.a ? '✅ ' : '⚠️ Falsch. ') + q.ex;
+  }
+  setTimeout(() => { quizIndex++; renderQuiz(); }, 1800);
+}
+
+function restartQuiz() {
+  quizIndex = 0;
+  quizScore = 0;
+  document.getElementById('quizResult').classList.remove('show', 'feedback-correct', 'feedback-wrong');
+  renderQuiz();
+}
+
+function issueCert() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { alert('Bitte deinen Namen eingeben.'); return; }
+  document.getElementById('certName').textContent = name;
+  const badgeDisplay = document.getElementById('certBadgesDisplay');
+  if (badgeDisplay) {
+    badgeDisplay.innerHTML = earnedBadges.map(id => {
+      const b = BADGE_DEF.find(x => x.id === id);
+      return b ? `<div style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);border-radius:10px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,.8)">${b.icon} ${b.name}</div>` : '';
+    }).join('');
+  }
+}
+
+// ─── INIT ───
+function init() {
+  buildNav();
+  buildAIUseCases();
+  buildToolGrid();
+  buildKanban();
+  buildRiskMatrix();
+  buildFeatureDecisions();
+  setupRoadmap();
+  setupDragDrop();
+  renderQuiz();
+
+  // Kanban drag to columns
+  document.querySelectorAll('.kanban-col').forEach(col => {
+    col.addEventListener('dragover', e => { e.preventDefault(); col.style.background = 'rgba(0,212,255,.04)'; });
+    col.addEventListener('dragleave', () => { col.style.background = ''; });
+    col.addEventListener('drop', e => {
+      e.preventDefault();
+      col.style.background = '';
+      if (draggedEl && draggedEl.classList.contains('kanban-task')) {
+        col.appendChild(draggedEl);
+        draggedEl = null;
+        updateKanbanCounts();
+      }
+    });
+  });
+
+  // Document-level drag start
+  document.addEventListener('dragstart', e => {
+    if (e.target.classList.contains('kanban-task')) draggedEl = e.target;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
